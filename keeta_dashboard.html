@@ -40,6 +40,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .home-btn{background:var(--s2)!important;border:1px solid var(--brd)!important}
 @media print{
   @page{size:A4;margin:8mm}
+  :root{
+    --bg:#ffffff!important;
+    --s1:#f8f9fa!important;
+    --s2:#f1f3f5!important;
+    --s3:#e9ecef!important;
+    --brd:#dee2e6!important;
+    --brd2:#ced4da!important;
+    --txt:#000000!important;
+    --txt2:#333333!important;
+    --txt3:#555555!important;
+  }
   .no-print,.tabs,.tools,.rbtn,input,select,button{display:none!important}
   html,body{background:#fff!important;color:#000!important;margin:0!important;padding:0!important;font-size:10px!important}
   .pane{background:#fff!important;border:none!important;color:#000!important;box-shadow:none!important;padding:0!important;margin:0!important}
