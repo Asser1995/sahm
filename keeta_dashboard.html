@@ -555,6 +555,7 @@ const KEETA_LABELS = {
 };
 
 function applyKeetaLang(){
+  if(typeof buildMonthTabs==='function') buildMonthTabs();
   const map = KEETA_LABELS[LANG] || KEETA_LABELS.ar;
   Object.keys(map).forEach(id => {
     const el = document.getElementById(id);
