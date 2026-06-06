@@ -371,32 +371,7 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
 .rpt-table .rpt-total{background:var(--s3)!important;font-weight:700}
 .rpt-driver-header{background:var(--s2);border:1px solid var(--brd);border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;gap:20px;flex-wrap:wrap}
 .rpt-driver-header span{font-size:12px;color:var(--txt2)}.rpt-driver-header strong{color:var(--txt)}
-@media print{
-  /* ── تقرير المقارنة ── */
-  body.printing-rpt > *:not(.rpt-modal){display:none!important}
-  body.printing-rpt .rpt-modal{position:static!important;background:none!important;display:block!important;padding:0!important;width:100%!important}
-  body.printing-rpt .rpt-box{max-width:100%!important;width:100%!important;border:none!important;box-shadow:none!important;background:#fff!important}
-  body.printing-rpt .rpt-hdr button{display:none!important}
-  body.printing-rpt .rpt-body .rpt-section:not(.rpt-result-section){display:none!important}
-  body.printing-rpt .rpt-hdr{border-bottom:2px solid #333!important;padding:6px 10px!important;background:#fff!important}
-  body.printing-rpt .rpt-hdr .card-t{color:#000!important;font-size:14px!important}
-  body.printing-rpt .rpt-driver-header{background:#f5f5f5!important;border:1px solid #ccc!important;color:#000!important;flex-wrap:wrap!important;font-size:10px!important}
-  body.printing-rpt .rpt-driver-header span,body.printing-rpt .rpt-driver-header strong{color:#000!important}
-  body.printing-rpt .rpt-table-wrap{overflow:visible!important;max-height:none!important;width:100%!important}
-  body.printing-rpt .rpt-table{width:100%!important;font-size:9px!important;table-layout:auto!important}
-  body.printing-rpt .rpt-table th{background:#eee!important;color:#000!important;border:1px solid #aaa!important;padding:4px 5px!important;font-size:9px!important;white-space:nowrap!important}
-  body.printing-rpt .rpt-table td{border:1px solid #ccc!important;color:#000!important;padding:4px 5px!important;font-size:9px!important;white-space:nowrap!important}
-  body.printing-rpt .rpt-table tr:nth-child(even){background:#f9f9f9!important}
-  body.printing-rpt .rpt-table .rpt-total{background:#e0e0e0!important;font-weight:700!important}
-  body.printing-rpt .rpt-body{padding:8px!important;overflow:visible!important;max-height:none!important}
-  body.printing-rpt .rpt-result-section{display:block!important}
-  body.printing-rpt #rpt-result{display:block!important}
-  body.printing-rpt tbody{display:table-row-group!important}
-  body.printing-rpt tbody tr{display:table-row!important;visibility:visible!important}
-  body.printing-rpt tbody td{display:table-cell!important;visibility:visible!important}
-  body.printing-rpt *{color:#000!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  @page{size:A4 landscape;margin:8mm}
-}
+
 </style>
 </head>
 <body>
@@ -406,6 +381,7 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   <div class="ov-txt">جاري تهيئة الداشبورد...</div>
   <div class="ov-sub" id="ov-sub">تحميل البيانات</div>
 </div>
+<div id="print-co-hdr"><div class="co-name">شركة منصة سهم التجارية</div><div class="co-dept">إدارة التشغيل</div></div>
 <div class="app">
 <header class="hdr">
   <div class="hdr-l">
@@ -418,7 +394,6 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   <div class="hdr-r">
     <div class="badge">📅 <strong id="report-date">—</strong> | <span id="lbl-days">أيام</span>: <strong id="total-days">—</strong></div>
     <div class="badge" id="upd-time">جاري التحميل...</div>
-    <button class="rbtn no-print" onclick="openRpt()" style="background:linear-gradient(135deg,#7c3aed,#5b21b6)">📋 <span>تقرير مقارن</span></button>
     <button class="rbtn no-print" onclick="window.print()" style="background:var(--s2);border:1px solid var(--brd)" id="print-btn">🖨️ <span id="lbl-print">طباعة التقرير</span></button>
     <button class="rbtn no-print" id="drive-btn" onclick="syncFromDrive()" style="background:linear-gradient(135deg,#1a73e8,#0b5cb0);color:#fff;border:none">
       <span id="drive-icon">🔄</span> <span id="lbl-drive">تحديث من Drive</span>
@@ -2331,226 +2306,14 @@ function setAlert(msg, type) {
 // ─── INIT ──────────────────────────────────────────
 (function init() {
   document.getElementById('upd-time').textContent = '📦 بيانات ' + (DATA.report_date || '—');
-  // ─── MULTI-MONTH REPORT ───────────────────────────────────────────────────
-let rptSelectedDriver = null;
-
-window.openRpt = function(){
-  const mc = document.getElementById('rpt-month-checks');
-  mc.innerHTML = MONTHS_CONFIG.map(m=>`
-    <label class="rpt-month-cb">
-      <input type="checkbox" value="${m.id}" checked> ${m.label}
-    </label>`).join('');
-  document.getElementById('rpt-search').value = '';
-  document.getElementById('rpt-suggestions').style.display = 'none';
-  document.getElementById('rpt-result').innerHTML = '';
-  rptSelectedDriver = null;
-  document.getElementById('rpt-modal').classList.add('on');
-}
-window.closeRpt = function(){ document.getElementById('rpt-modal').classList.remove('on'); }
-window.printRpt = function(){
-  const driverHeader = document.querySelector('.rpt-driver-header');
-  const tableWrap = document.querySelector('.rpt-table-wrap');
-  if(!driverHeader || !tableWrap){ alert('لا توجد بيانات للطباعة'); return; }
-  const title = document.querySelector('#rpt-modal .card-t')?.textContent || 'تقرير مقارن';
-  const w = window.open('','_blank','width=1000,height=700');
-  w.document.write(`<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>${title}</title>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:Arial,sans-serif;direction:rtl;padding:12px;font-size:11px;color:#000;background:#fff}
-  h2{font-size:14px;font-weight:900;margin-bottom:10px;border-bottom:2px solid #333;padding-bottom:6px}
-  .info{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;background:#f5f5f5;border:1px solid #ccc;border-radius:6px;padding:8px 12px}
-  .info span{font-size:11px;color:#333}
-  .info strong{color:#000}
-  table{width:100%;border-collapse:collapse;font-size:10px}
-  th{background:#e5e7eb;color:#000;padding:6px 8px;border:1px solid #aaa;font-weight:700;white-space:nowrap;text-align:center}
-  td{padding:5px 8px;border:1px solid #ccc;color:#000;text-align:center}
-  tr:nth-child(even){background:#f9f9f9}
-  .total-row{background:#e0e0e0!important;font-weight:700}
-  @page{size:A4 landscape;margin:8mm}
-  @media print{body{padding:0}}
-</style>
-</head>
-<body>
-<h2>${title}</h2>
-<div class="info">${driverHeader.innerHTML}</div>
-${tableWrap.innerHTML}
-<script>window.onload=function(){window.print();window.close();}<\/script>
-</body></html>`);
-  w.document.close();
-}
-
-window.rptGetSelectedMonths = function(){
-  return [...document.querySelectorAll('#rpt-month-checks input:checked')].map(cb=>cb.value);
-}
-
-window.rptSearch = function(q){
-  const sug = document.getElementById('rpt-suggestions');
-  if(!q.trim()){ sug.style.display='none'; return; }
-  const seen = new Map();
-  Object.entries(MONTHS_DATA).forEach(([mid, mdata])=>{
-    (mdata.drivers||[]).forEach(d=>{
-      if(!seen.has(d.id)) seen.set(d.id, d.name);
-    });
-  });
-  const matches = [...seen.entries()].filter(([id,name])=>name.toLowerCase().includes(q.toLowerCase())).slice(0,12);
-  if(!matches.length){ sug.style.display='none'; return; }
-  sug.innerHTML = matches.map(([id,name])=>`<div class="rpt-sug-item" onclick="rptSelectDriver('${id}','${name.replace(/'/g,"\\'")}')"> ${name}</div>`).join('');
-  sug.style.display='block';
-}
-
-window.rptSelectDriver = function(id, name){
-  rptSelectedDriver = id;
-  document.getElementById('rpt-search').value = name;
-  document.getElementById('rpt-suggestions').style.display='none';
-  rptGenerate();
-}
-
-window.rptGenerate = function(){
-  if(!rptSelectedDriver) return;
-  const months = rptGetSelectedMonths();
-  if(!months.length){ document.getElementById('rpt-result').innerHTML='<p style="color:var(--red);font-size:12px;text-align:center">اختر شهراً على الأقل</p>'; return; }
-
-  const rows = [];
-  let driverName='', driverCity='', driverVehicle='', driverIqama='';
-  let totalCompleted=0, totalHours=0, totalWorkDays=0, totalKm=0, totalWknd=0;
-  let rateSum=0, rateCount=0, kmCount=0;
-
-  months.forEach(mid=>{
-    const mdata = MONTHS_DATA[mid];
-    if(!mdata || !mdata.drivers) return;
-    const d = mdata.drivers.find(x=>String(x.id)===String(rptSelectedDriver));
-    const mc = MONTHS_CONFIG.find(m=>m.id===mid);
-    const label = mc ? mc.label : mid;
-    if(d){
-      driverName = d.name; driverCity = d.city; driverVehicle = d.vehicle||'—'; driverIqama = d.iqama||'—';
-      totalCompleted += d.completed||0;
-      totalHours     += d.hours||0;
-      totalWorkDays  += d.work_days||0;
-      totalWknd      += d.wknd_absent||0;
-      if(d.acceptance_rate!=null){ rateSum += d.acceptance_rate; rateCount++; }
-      if(d.km!=null){ totalKm += d.km; kmCount++; }
-      rows.push({label, found:true, d});
-    } else {
-      rows.push({label, found:false});
-    }
-  });
-
-  if(!driverName){ document.getElementById('rpt-result').innerHTML='<p style="color:var(--red);font-size:12px;text-align:center">المندوب غير موجود في الأشهر المختارة</p>'; return; }
-
-  const avgRate = rateCount ? Math.round(rateSum/rateCount) : 0;
-  const avgKm = (kmCount && totalCompleted) ? (totalKm/totalCompleted).toFixed(1) : 0;
-  const vehicleLabels = {car:'🚗 سيارة', bike:'🛵 دباب', Car:'🚗 سيارة', Bike:'🛵 دباب'};
-  const vehicleAr = vehicleLabels[driverVehicle] || driverVehicle;
-
-  const statusColors = {'active':'var(--grn)','inactive':'var(--red)','suspended':'var(--orn)'};
-
-  const tableRows = rows.map(row=>{
-    if(!row.found) return `<tr><td>${row.label}</td><td colspan="14" style="color:var(--txt3)">— غير موجود هذا الشهر —</td></tr>`;
-    const d = row.d;
-    const rateCls = (d.acceptance_rate||0) >= 80 ? 'color:var(--grn)' : 'color:var(--red)';
-    const statusColor = statusColors[(d.status||'').toLowerCase()] || 'var(--txt3)';
-    const walletCls = (d.wallet||0) < 0 ? 'color:var(--red2)' : 'color:var(--grn2)';
-    const wkndCls   = (d.wknd_absent||0) > 0 ? 'color:var(--red2)' : 'color:var(--txt3)';
-    return `<tr>
-      <td style="font-weight:700">${row.label}</td>
-      <td>${d.city||'—'}</td>
-      <td>${vehicleLabels[d.vehicle]||d.vehicle||'—'}</td>
-      <td style="color:var(--txt3)">${d.planned||0}</td>
-      <td style="color:var(--grn2)">${d.accepted||0}</td>
-      <td style="color:var(--red2)">${Math.max((d.planned||0)-(d.accepted||0),0)}</td>
-      <td style="font-weight:700;color:var(--acc)">${d.completed||0}</td>
-      <td>${d.hours||0}</td>
-      <td style="${rateCls}">${d.acceptance_rate!=null?d.acceptance_rate+'%':'—'}</td>
-      <td>${d.work_days||0}</td>
-      <td style="${wkndCls};font-weight:700">${d.wknd_absent||0}</td>
-      <td style="color:var(--txt3)">${(d.km!=null&&d.completed)?( d.km/d.completed).toFixed(1)+' km' :'—'}</td>
-      <td style="${walletCls};font-weight:700">${d.wallet!=null?d.wallet.toFixed(1):'—'}</td>
-      <td style="color:${statusColor};font-weight:700">${d.status||'—'}</td>
-    </tr>`;
-  }).join('');
-
-  document.getElementById('rpt-result').innerHTML = `
-    <div class="rpt-section rpt-result-section" style="margin-top:0">
-      <div class="rpt-driver-header">
-        <span>👤 <strong>${driverName}</strong></span>
-        <span>🪪 الهوية: <strong>${driverIqama}</strong></span>
-        <span>🏙️ <strong>${driverCity}</strong></span>
-        <span>🚗 <strong>${vehicleAr}</strong></span>
-        <span>📦 إجمالي الطلبات: <strong>${totalCompleted}</strong></span>
-        <span>⏱️ إجمالي ساعات العمل: <strong>${totalHours}</strong></span>
-        <span>✅ متوسط القبول: <strong>${avgRate}%</strong></span>
-        <span>🗺️ متوسط KM: <strong>${avgKm}</strong></span>
-        <span>📅 غيابات الويكيند: <strong>${totalWknd}</strong></span>
-      </div>
-      <div class="rpt-table-wrap">
-        <table class="rpt-table">
-          <thead><tr>
-            <th>الشهر</th><th>المدينة</th><th>المركبة</th>
-            <th>المخطط</th><th>المقبولة</th><th>المرفوضة</th><th>المكتملة</th><th>ساعات العمل</th><th>نسبة القبول</th>
-            <th>أيام العمل</th><th>غياب ويكيند</th><th>متوسط KM</th><th>المحفظة</th><th>الحالة</th>
-          </tr></thead>
-          <tbody>${tableRows}</tbody>
-          <tfoot><tr class="rpt-total">
-            <td>الإجمالي</td>
-            <td>—</td><td>—</td>
-            <td>—</td><td>—</td><td>—</td>
-            <td>${totalCompleted}</td>
-            <td>${totalHours}</td>
-            <td>${avgRate}%</td>
-            <td>${totalWorkDays}</td>
-            <td>${totalWknd}</td>
-            <td>${avgKm} km</td>
-            <td>—</td><td>—</td>
-          </tr></tfoot>
-        </table>
-      </div>
-    </div>`;
-}
-
-// Close suggestions when clicking outside
-document.addEventListener('click', e=>{
-  if(!e.target.closest('#rpt-search') && !e.target.closest('#rpt-suggestions'))
-    document.getElementById('rpt-suggestions').style.display='none';
-});
-// Regenerate when months change
-document.addEventListener('change', e=>{
-  if(e.target.closest('#rpt-month-checks') && rptSelectedDriver) rptGenerate();
-});
-
+  
 buildMonthTabs();
   applyLang();
   try { renderAll(); } catch(e) { console.error('[renderAll]', e); }
   document.getElementById('overlay').style.display = 'none';
 })();
 </script>
-<!-- REPORT MODAL -->
-<div class="rpt-modal" id="rpt-modal">
-  <div class="rpt-box">
-    <div class="rpt-hdr">
-      <div class="card-t">📋 تقرير مقارن متعدد الأشهر</div>
-      <div style="display:flex;gap:6px">
-        <button class="x" onclick="printRpt()" title="طباعة" style="font-size:15px;background:var(--s2);border:1px solid var(--brd);color:var(--txt);width:30px;height:30px;border-radius:7px;cursor:pointer">🖨️</button>
-        <button class="x" onclick="closeRpt()" style="background:var(--s2);border:1px solid var(--brd);color:var(--txt);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:16px">✕</button>
-      </div>
-    </div>
-    <div class="rpt-body">
-      <div class="rpt-section">
-        <label>📅 اختر الأشهر</label>
-        <div class="rpt-months" id="rpt-month-checks"></div>
-      </div>
-      <div class="rpt-section">
-        <label>🔍 اسم المندوب</label>
-        <input class="rpt-search" id="rpt-search" type="text" placeholder="اكتب اسم المندوب..." oninput="rptSearch(this.value)" autocomplete="off">
-        <div class="rpt-suggestions" id="rpt-suggestions"></div>
-      </div>
-      <div id="rpt-result"></div>
-    </div>
-  </div>
-</div>
+
 <!-- DRIVERS -->
 <div class="pane" id="pane-drivers">
   <div class="filters">

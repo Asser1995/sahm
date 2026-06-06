@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#070809;--card:#101319;--brd:#1e2530;--txt:#e2e8f0;--txt2:#94a3b8;--txt3:#5b6675;
---hunger:#f97316;--keeta:#eab308;--hr:#22d3ee}
+--hunger:#f97316;--keeta:#eab308;--hr:#22d3ee;--compare:#a855f7}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
   display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
@@ -24,13 +24,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   opacity:0;animation:fade .6s ease .1s forwards}
 .title .o{color:var(--hunger)}.title .y{color:var(--keeta)}
 .sub{font-size:14px;color:var(--txt2);margin-bottom:44px;opacity:0;animation:fade .6s ease .2s forwards}
-.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px}
-@media(max-width:980px){.cards{grid-template-columns:1fr 1fr}}
-@media(max-width:680px){.cards{grid-template-columns:1fr}}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+@media(max-width:1100px){.cards{grid-template-columns:1fr 1fr 1fr}}@media(max-width:720px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.cards{grid-template-columns:1fr}}
 .pcard{position:relative;background:var(--card);border:1px solid var(--brd);border-radius:20px;
   padding:36px 28px;cursor:pointer;transition:.35s cubic-bezier(.2,.8,.2,1);overflow:hidden;
   text-decoration:none;color:inherit;opacity:0;animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
-.pcard:nth-child(1){animation-delay:.3s}.pcard:nth-child(2){animation-delay:.42s}.pcard:nth-child(3){animation-delay:.54s}
+.pcard:nth-child(1){animation-delay:.3s}.pcard:nth-child(2){animation-delay:.42s}.pcard:nth-child(3){animation-delay:.54s}.pcard:nth-child(4){animation-delay:.66s}
 .pcard::before{content:'';position:absolute;inset:0;opacity:0;transition:.35s;
   background:radial-gradient(ellipse 80% 60% at 50% 0%,var(--glow),transparent)}
 .pcard:hover{transform:translateY(-8px);border-color:var(--ac)}
@@ -56,6 +56,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .hunger{--ac:var(--hunger);--glow:rgba(249,115,22,1)}
 .keeta{--ac:var(--keeta);--glow:rgba(234,179,8,1)}
 .hr{--ac:var(--hr);--glow:rgba(34,211,238,1)}
+.compare{--ac:var(--compare);--glow:rgba(168,85,247,1)}
+.compare .ic{background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.05));border:1px solid rgba(168,85,247,.3);box-shadow:0 0 40px rgba(168,85,247,.15)}
 .foot{margin-top:38px;font-size:11px;color:var(--txt3);opacity:0;animation:fade .6s ease .6s forwards}
 .live{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;
   animation:pulse 2s infinite;margin-left:5px}
@@ -87,6 +89,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="stats">
         <div class="stat"><div class="stat-v">38</div><div class="stat-l">سائق</div></div>
         <div class="stat"><div class="stat-v">يونيو</div><div class="stat-l">الشهر الحالي</div></div>
+      </div>
+      <div class="go">دخول <span>←</span></div>
+    </a>
+    <a class="pcard compare" href="comparison.html">
+      <div class="ic">📊</div>
+      <div class="pname">مقارنة</div>
+      <div class="pdesc">تقارير التطبيقات متعدد الأشهر — كيتا & هنقر</div>
+      <div class="stats">
+        <div class="stat"><div class="stat-v">2</div><div class="stat-l">تطبيق</div></div>
+        <div class="stat"><div class="stat-v">4</div><div class="stat-l">أشهر</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
     </a>
