@@ -598,6 +598,8 @@ function printReport() {
 }
 
 // Close autocomplete on outside click
+buildMonthList();
+
 document.addEventListener('click', e => {
   if (!e.target.closest('#months-btn') && !e.target.closest('#months-drop'))
     document.getElementById('months-drop').style.display = 'none';
