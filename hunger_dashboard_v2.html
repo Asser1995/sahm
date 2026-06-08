@@ -448,10 +448,10 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
       <span style="font-size:11px;color:var(--txt3);margin-left:4px" id="dist-chip-label">الشريحة:</span>
       <button class="bchip on" data-b="" onclick="setBucket('')" style="border-color:var(--brd2);color:var(--txt2)">الكل</button>
       <button class="bchip" data-b="0"   onclick="setBucket('0')"   style="--c:#ef4444">أقل من 300</button>
-      <button class="bchip" data-b="300" onclick="setBucket('300')" style="--c:#f97316">300 - 399</button>
-      <button class="bchip" data-b="400" onclick="setBucket('400')" style="--c:#eab308">400 - 499</button>
-      <button class="bchip" data-b="500" onclick="setBucket('500')" style="--c:#3b82f6">500 - 549</button>
-      <button class="bchip" data-b="550" onclick="setBucket('550')" style="--c:#22c55e">550 فأكثر</button>
+      <button class="bchip" data-b="300" onclick="setBucket('300')" style="--c:#f97316">300 - 449</button>
+      <button class="bchip" data-b="450" onclick="setBucket('450')" style="--c:#eab308">450 - 549</button>
+      <button class="bchip" data-b="550" onclick="setBucket('550')" style="--c:#3b82f6">550 - 600</button>
+      <button class="bchip" data-b="601" onclick="setBucket('601')" style="--c:#22c55e">أعلى من 600</button>
     </div>
     <div id="orders-dist" style="padding:16px"></div>
   </div>
@@ -1504,11 +1504,11 @@ function renderOrdersDist() {
   if (cntEl) cntEl.textContent = n + ' ' + T('driver_unit');
 
   const buckets = [
-    {min:0,   max:299, color:'#ef4444', label_ar:'أقل من 300', label_en:'Below 300'},
-    {min:300, max:399, color:'#f97316', label_ar:'300 - 399', label_en:'300 - 399'},
-    {min:400, max:499, color:'#eab308', label_ar:'400 - 499', label_en:'400 - 499'},
-    {min:500, max:549, color:'#3b82f6', label_ar:'500 - 549', label_en:'500 - 549'},
-    {min:550, max:Infinity, color:'#22c55e', label_ar:'550 فأكثر', label_en:'550+'},
+    {min:0,   max:299, color:'#ef4444', label_ar:'أقل من 300',  label_en:'Below 300',  target:2,  target_type:'max'},
+    {min:300, max:449, color:'#f97316', label_ar:'300 - 449',   label_en:'300 - 449',  target:8,  target_type:'min'},
+    {min:450, max:549, color:'#eab308', label_ar:'450 - 549',   label_en:'450 - 549',  target:50, target_type:'min'},
+    {min:550, max:600, color:'#3b82f6', label_ar:'550 - 600',   label_en:'550 - 600',  target:30, target_type:'min'},
+    {min:601, max:Infinity, color:'#22c55e', label_ar:'أعلى من 600', label_en:'Above 600', target:10, target_type:'min'},
   ];
   if (n === 0) {
     document.getElementById('orders-dist').innerHTML = '<div style="text-align:center;color:var(--txt3);padding:24px;font-size:12px">' + T('no_results') + '</div>';
@@ -1528,7 +1528,21 @@ function renderOrdersDist() {
     return '<div style="margin-bottom:12px;opacity:'+opacity+';transition:opacity .25s;'+ringStyle+'">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:5px">' +
         '<span style="font-weight:700;color:' + b.color + '">' + lbl + '</span>' +
-        '<span style="color:var(--txt2)"><strong style="color:var(--txt);font-size:14px">' + pct + '%</strong> <span style="font-size:10px;color:var(--txt3)">(' + c + ' ' + T('driver_unit') + ')</span></span>' +
+        '<span style="color:var(--txt2);display:flex;align-items:center;gap:6px">' +
+          '<strong style="color:var(--txt);font-size:14px">' + pct + '%</strong>' +
+          '<span style="font-size:10px;color:var(--txt3)">(' + c + ' ' + T('driver_unit') + ')</span>' +
+          (() => {
+            const tOk = b.target_type === 'max' ? pct <= b.target : pct >= b.target;
+            const tLbl = b.target_type === 'max'
+              ? (isAr ? 'الحد: ' : 'Max: ') + b.target + '%'
+              : (isAr ? 'الهدف: ' : 'Target: ') + b.target + '%';
+            return '<span style="font-size:10px;padding:2px 6px;border-radius:10px;background:' +
+              (tOk ? '#22c55e22' : '#ef444422') + ';color:' +
+              (tOk ? '#4ade80' : '#f87171') + ';border:1px solid ' +
+              (tOk ? '#22c55e44' : '#ef444444') + '">' +
+              (tOk ? '✓ ' : '✗ ') + tLbl + '</span>';
+          })() +
+        '</span>' +
       '</div>' +
       '<div style="height:14px;background:var(--s3);border-radius:7px;overflow:hidden">' +
         '<div style="height:100%;width:' + barW + '%;background:' + b.color + ';border-radius:7px;transition:width .4s;min-width:' + (c>0?'24px':'0') + '"></div>' +
@@ -3336,11 +3350,11 @@ function renderOrdersDist() {
   if (cntEl) cntEl.textContent = n + ' ' + T('driver_unit');
 
   const buckets = [
-    {min:0,   max:299, color:'#ef4444', label_ar:'أقل من 300', label_en:'Below 300'},
-    {min:300, max:399, color:'#f97316', label_ar:'300 - 399', label_en:'300 - 399'},
-    {min:400, max:499, color:'#eab308', label_ar:'400 - 499', label_en:'400 - 499'},
-    {min:500, max:549, color:'#3b82f6', label_ar:'500 - 549', label_en:'500 - 549'},
-    {min:550, max:Infinity, color:'#22c55e', label_ar:'550 فأكثر', label_en:'550+'},
+    {min:0,   max:299, color:'#ef4444', label_ar:'أقل من 300',  label_en:'Below 300',  target:2,  target_type:'max'},
+    {min:300, max:449, color:'#f97316', label_ar:'300 - 449',   label_en:'300 - 449',  target:8,  target_type:'min'},
+    {min:450, max:549, color:'#eab308', label_ar:'450 - 549',   label_en:'450 - 549',  target:50, target_type:'min'},
+    {min:550, max:600, color:'#3b82f6', label_ar:'550 - 600',   label_en:'550 - 600',  target:30, target_type:'min'},
+    {min:601, max:Infinity, color:'#22c55e', label_ar:'أعلى من 600', label_en:'Above 600', target:10, target_type:'min'},
   ];
   if (n === 0) {
     document.getElementById('orders-dist').innerHTML = '<div style="text-align:center;color:var(--txt3);padding:24px;font-size:12px">' + T('no_results') + '</div>';
@@ -3360,7 +3374,21 @@ function renderOrdersDist() {
     return '<div style="margin-bottom:12px;opacity:'+opacity+';transition:opacity .25s;'+ringStyle+'">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:5px">' +
         '<span style="font-weight:700;color:' + b.color + '">' + lbl + '</span>' +
-        '<span style="color:var(--txt2)"><strong style="color:var(--txt);font-size:14px">' + pct + '%</strong> <span style="font-size:10px;color:var(--txt3)">(' + c + ' ' + T('driver_unit') + ')</span></span>' +
+        '<span style="color:var(--txt2);display:flex;align-items:center;gap:6px">' +
+          '<strong style="color:var(--txt);font-size:14px">' + pct + '%</strong>' +
+          '<span style="font-size:10px;color:var(--txt3)">(' + c + ' ' + T('driver_unit') + ')</span>' +
+          (() => {
+            const tOk = b.target_type === 'max' ? pct <= b.target : pct >= b.target;
+            const tLbl = b.target_type === 'max'
+              ? (isAr ? 'الحد: ' : 'Max: ') + b.target + '%'
+              : (isAr ? 'الهدف: ' : 'Target: ') + b.target + '%';
+            return '<span style="font-size:10px;padding:2px 6px;border-radius:10px;background:' +
+              (tOk ? '#22c55e22' : '#ef444422') + ';color:' +
+              (tOk ? '#4ade80' : '#f87171') + ';border:1px solid ' +
+              (tOk ? '#22c55e44' : '#ef444444') + '">' +
+              (tOk ? '✓ ' : '✗ ') + tLbl + '</span>';
+          })() +
+        '</span>' +
       '</div>' +
       '<div style="height:14px;background:var(--s3);border-radius:7px;overflow:hidden">' +
         '<div style="height:100%;width:' + barW + '%;background:' + b.color + ';border-radius:7px;transition:width .4s;min-width:' + (c>0?'24px':'0') + '"></div>' +
