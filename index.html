@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#070809;--card:#101319;--brd:#1e2530;--txt:#e2e8f0;--txt2:#94a3b8;--txt3:#5b6675;
---hunger:#f97316;--keeta:#eab308;--hr:#22d3ee;--compare:#a855f7}
+--hunger:#f97316;--keeta:#eab308;--hr:#22d3ee;--compare:#a855f7;--masar:#0ea5e9}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
   display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
@@ -17,15 +17,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   linear-gradient(rgba(148,163,184,.015)1px,transparent 1px),
   linear-gradient(90deg,rgba(148,163,184,.015)1px,transparent 1px);
   background-size:100%,100%,46px 46px,46px 46px}
-.wrap{position:relative;z-index:1;width:100%;max-width:1080px;text-align:center}
+.wrap{position:relative;z-index:1;width:100%;max-width:1320px;text-align:center}
 .brand{margin-bottom:8px;font-size:13px;color:var(--txt3);letter-spacing:3px;font-weight:600;
   opacity:0;animation:fade .6s ease forwards}
 .title{font-size:clamp(28px,5vw,46px);font-weight:900;margin-bottom:10px;line-height:1.1;
   opacity:0;animation:fade .6s ease .1s forwards}
 .title .o{color:var(--hunger)}.title .y{color:var(--keeta)}
 .sub{font-size:14px;color:var(--txt2);margin-bottom:44px;opacity:0;animation:fade .6s ease .2s forwards}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
-@media(max-width:1100px){.cards{grid-template-columns:1fr 1fr 1fr}}@media(max-width:720px){.cards{grid-template-columns:1fr 1fr}}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:22px}
+@media(max-width:1300px){.cards{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){.cards{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.cards{grid-template-columns:1fr}}
 .pcard{position:relative;background:var(--card);border:1px solid var(--brd);border-radius:20px;
   padding:36px 28px;cursor:pointer;transition:.35s cubic-bezier(.2,.8,.2,1);overflow:hidden;
@@ -58,6 +58,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .hr{--ac:var(--hr);--glow:rgba(34,211,238,1)}
 .compare{--ac:var(--compare);--glow:rgba(168,85,247,1)}
 .compare .ic{background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.05));border:1px solid rgba(168,85,247,.3);box-shadow:0 0 40px rgba(168,85,247,.15)}
+.masar{--ac:var(--masar);--glow:rgba(14,165,233,1)}
+.masar .ic{background:linear-gradient(135deg,rgba(14,165,233,.2),rgba(14,165,233,.05));border:1px solid rgba(14,165,233,.3);box-shadow:0 0 40px rgba(14,165,233,.15)}
+.pcard:nth-child(5){animation-delay:.78s}
 .foot{margin-top:38px;font-size:11px;color:var(--txt3);opacity:0;animation:fade .6s ease .6s forwards}
 .live{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;
   animation:pulse 2s infinite;margin-left:5px}
@@ -95,10 +98,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <a class="pcard compare" href="comparison.html">
       <div class="ic">📊</div>
       <div class="pname">مقارنة</div>
-      <div class="pdesc">تقارير التطبيقات متعدد الأشهر — كيتا & هنقر</div>
+      <div class="pdesc">تقارير التطبيقات متعدد الأشهر — كيتا & هنقر & مسار</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">2</div><div class="stat-l">تطبيق</div></div>
+        <div class="stat"><div class="stat-v">3</div><div class="stat-l">تطبيق</div></div>
         <div class="stat"><div class="stat-v">2</div><div class="stat-l">أشهر</div></div>
+      </div>
+      <div class="go">دخول <span>←</span></div>
+    </a>
+    <a class="pcard masar" href="masar_map_dashboard.html">
+      <div class="ic">🗺️</div>
+      <div class="pname">مسار ماب</div>
+      <div class="pdesc">HungerStation — فرع مسار ماب</div>
+      <div class="stats">
+        <div class="stat"><div class="stat-v">13</div><div class="stat-l">سائق</div></div>
+        <div class="stat"><div class="stat-v">2,012</div><div class="stat-l">طلب</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
     </a>
