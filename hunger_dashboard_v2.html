@@ -636,6 +636,23 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
 
 <!-- GOALS -->
 <div class="pane" id="pane-goals">
+<div class="toolbar no-print" id="goals-filter-bar" style="margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:10px 14px;background:var(--s1);border:1px solid var(--brd);border-radius:var(--r)">
+  <span style="font-size:11px;color:var(--txt3);font-weight:700">🔍 فلتر:</span>
+  <span class="fsel" data-icon="🏙️" style="--c:#f97316"><select id="gf-city" onchange="renderGoals()"><option value="">كل المدن</option></select></span>
+  <span class="fsel" data-icon="👤" style="--c:#a855f7"><select id="gf-sup" onchange="renderGoals()"><option value="">كل المشرفين</option></select></span>
+  <span class="fsel" data-icon="📊" style="--c:#22c55e"><select id="gf-status" onchange="renderGoals()">
+    <option value="">كل الحالات</option>
+    <option value="غير محقق">غير محقق</option>
+    <option value="محقق">محقق</option>
+  </select></span>
+  <span class="fsel" data-icon="🚗" style="--c:#0ea5e9"><select id="gf-vehicle" onchange="renderGoals()">
+    <option value="">كل المركبات</option>
+    <option value="car">🚗 سيارة</option>
+    <option value="bike">🛵 دباب</option>
+  </select></span>
+  <button onclick="resetGoalsFilter()" style="padding:6px 14px;border-radius:var(--r2);border:1.5px solid var(--brd);background:var(--s2);color:var(--txt2);font-size:11px;cursor:pointer;font-family:inherit">× إعادة ضبط</button>
+  <span id="gf-count" style="margin-right:auto;font-size:11px;color:var(--txt3)"></span>
+</div>
   <div class="kpi-grid" id="goals-kpis"></div>
   <div class="card" style="margin-bottom:14px">
     <div class="card-h">
@@ -2059,15 +2076,68 @@ function recomputeWeekendAbsence() {
   }
 }
 
+function populateGoalsFilters() {
+  const cities = [...new Set(DATA.drivers.map(d => d.city).filter(Boolean))].sort();
+  const sups   = [...new Set(DATA.drivers.map(d => d.supervisor).filter(Boolean))].sort();
+  const cityEl = document.getElementById('gf-city');
+  const supEl  = document.getElementById('gf-sup');
+  if (!cityEl || !supEl) return;
+  const prevCity = cityEl.value, prevSup = supEl.value;
+  cityEl.innerHTML = '<option value="">كل المدن</option>' + cities.map(c => `<option value="${c}">${cityLabel(c)}</option>`).join('');
+  supEl.innerHTML  = '<option value="">كل المشرفين</option>' + sups.map(s => `<option value="${s}">${s}</option>`).join('');
+  cityEl.value = prevCity; supEl.value = prevSup;
+}
+
+function resetGoalsFilter() {
+  const c = document.getElementById('gf-city');
+  const s = document.getElementById('gf-sup');
+  const st = document.getElementById('gf-status');
+  const v = document.getElementById('gf-vehicle');
+  if (c) c.value = '';
+  if (s) s.value = '';
+  if (st) st.value = '';
+  if (v) v.value = '';
+  [c,s,st,v].forEach(el => { if(el) el.closest('.fsel')?.classList.remove('has-value'); });
+  renderGoals();
+}
+
+function getGoalsDrivers() {
+  const city    = (document.getElementById('gf-city')    || {}).value || '';
+  const sup     = (document.getElementById('gf-sup')     || {}).value || '';
+  const status  = (document.getElementById('gf-status')  || {}).value || '';
+  const vehicle = (document.getElementById('gf-vehicle') || {}).value || '';
+  return DATA.drivers.filter(d =>
+    (!city    || d.city === city) &&
+    (!sup     || d.supervisor === sup) &&
+    (!status  || d.status === status) &&
+    (!vehicle || (d.vehicle||'').toLowerCase() === vehicle)
+  );
+}
+
 function renderGoals() {
   recomputeWeekendAbsence(); // إعادة حساب حية كل مرة — يلتقط تقرير السبت تلقائياً عند نزوله
+  populateGoalsFilters();
   const t = DATA.totals;
   const penalty = t.wknd_penalty || 500;
   const reportedDays = t.reported_days || 22;       // آخر يوم مُبلّغ (يُحدّث تلقائياً)
   const fullMonthRequired = t.required_days || 26;  // شرط الشهر الكامل
   const daysLeft = Math.max(31 - reportedDays, 1);  // أيام تقويمية باقية
 
-  const notAchieved = DATA.drivers.filter(d => d.status === 'غير محقق' && (Number(d.needs)||0) > 0);
+  // ── تحديث مؤشر الفلتر النشط ──
+  const filteredDrivers = getGoalsDrivers();
+  const countEl = document.getElementById('gf-count');
+  if (countEl) {
+    const total = DATA.drivers.length;
+    const shown = filteredDrivers.length;
+    countEl.textContent = shown < total ? `يظهر ${shown} من ${total} سائق` : '';
+  }
+  // تمييز الفلاتر النشطة
+  ['gf-city','gf-sup','gf-status','gf-vehicle'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.closest('.fsel')?.classList.toggle('has-value', !!el.value);
+  });
+
+  const notAchieved = filteredDrivers.filter(d => d.status === 'غير محقق' && (Number(d.needs)||0) > 0);
   const close = [...notAchieved].sort((a,b) => (Number(a.needs)||0) - (Number(b.needs)||0));
 
   function feasibility(d) {
@@ -2080,9 +2150,9 @@ function renderGoals() {
 
   // KPIs
   const veryClose = notAchieved.filter(d => (Number(d.needs)||0) <= 30).length;
-  const totalPenalty = DATA.drivers.reduce((s,d) => s + (d.wknd_penalty || 0), 0);
-  const lateStarters = DATA.drivers.filter(d => d.is_late_starter).length;
-  const lateBreaching = DATA.drivers.filter(d => d.is_late_starter && d.meets_commitment === false).length;
+  const totalPenalty = filteredDrivers.reduce((s,d) => s + (d.wknd_penalty || 0), 0);
+  const lateStarters = filteredDrivers.filter(d => d.is_late_starter).length;
+  const lateBreaching = filteredDrivers.filter(d => d.is_late_starter && d.meets_commitment === false).length;
 
   document.getElementById('goals-kpis').innerHTML = [
     {ic:'🎯', v:veryClose, l:T('kpi_veryclose'), sub:T('kpi_veryclose_sub', notAchieved.length), c:'var(--grn)'},
@@ -2116,7 +2186,7 @@ function renderGoals() {
   }).join('') : '<tr><td colspan="10" class="empty">' + T('empty_achieved') + '</td></tr>';
 
   // ── Late starters commitment ──
-  const lateList = DATA.drivers.filter(d => d.is_late_starter)
+  const lateList = filteredDrivers.filter(d => d.is_late_starter)
     .sort((a,b) => (a.commit_pct||0) - (b.commit_pct||0));
   document.getElementById('under-hours-count').textContent = lateList.length + ' ' + T('driver');
   document.getElementById('under-hours-body').innerHTML = lateList.length ? lateList.map(d => {
@@ -2129,7 +2199,7 @@ function renderGoals() {
   }).join('') : '<tr><td colspan="4" class="empty">' + T('empty_late') + '</td></tr>';
 
   // ── Full-month starters under 26 days ──
-  const ud = DATA.drivers.filter(d => !d.is_late_starter && d.work_days < fullMonthRequired)
+  const ud = filteredDrivers.filter(d => !d.is_late_starter && d.work_days < fullMonthRequired)
     .sort((a,b) => a.work_days - b.work_days);
   document.getElementById('under-days-count').textContent = ud.length + ' ' + T('driver');
   document.getElementById('under-days-body').innerHTML = ud.length ? ud.map(d =>
@@ -2141,7 +2211,7 @@ function renderGoals() {
   ).join('') : '<tr><td colspan="4" class="empty">' + T('empty_days') + '</td></tr>';
 
   // ── Weekend penalty (CORRECTED) ──
-  const wk = DATA.drivers.filter(d => (d.wknd_absent || 0) > 0)
+  const wk = filteredDrivers.filter(d => (d.wknd_absent || 0) > 0)
     .sort((a,b) => (b.wknd_absent||0) - (a.wknd_absent||0));
   const totPen = wk.reduce((s,d) => s + (d.wknd_penalty||0), 0);
   document.getElementById('wknd-total').textContent = totPen.toLocaleString() + ' ' + T('riyal');
