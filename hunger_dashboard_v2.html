@@ -494,10 +494,14 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
     <select class="fi" id="s-status" onchange="renderDrivers()">
       <option value="" id="opt-allstatus">كل الحالات</option><option value="محقق" id="opt-achieved">✅ محقق</option><option value="غير محقق" id="opt-notachieved">❌ غير محقق</option>
     </select>
-    <span class="fsel" data-icon="📦" style="--c:#ef4444;display:inline-flex;align-items:center;gap:4px">
-      <span style="font-size:10.5px;color:var(--txt3);font-weight:700;padding:0 4px" id="s-lt-lbl" data-i18n="lbl_threshold">طلبات أقل من:</span>
-      <input class="fi" type="number" id="s-lt" placeholder="مثال: 300" min="0" step="10" oninput="renderDrivers();markFilter(this)" style="width:100px;border-color:#ef4444">
-      <button class="rbtn" onclick="document.getElementById('s-lt').value='';markFilter(document.getElementById('s-lt'));renderDrivers()" style="background:transparent;border:1px solid var(--brd);padding:6px 8px;font-size:11px" title="مسح">✕</button>
+    <span style="display:inline-flex;align-items:center;gap:4px;background:var(--s1);border:1.5px solid #ef4444;border-radius:var(--r2);padding:2px 8px;height:36px" id="s-lt-wrap">
+      <span style="font-size:10.5px;color:var(--txt3);font-weight:700;white-space:nowrap">طلبات</span>
+      <select id="s-lt-op" onchange="renderDrivers()" style="border:none;background:transparent;font-size:11px;color:var(--txt);padding:4px 2px;cursor:pointer;font-family:inherit">
+        <option value="lt">أقل من</option>
+        <option value="gt">أكثر من</option>
+      </select>
+      <input class="fi" type="number" id="s-lt" placeholder="300" min="0" step="10" oninput="renderDrivers();markFilter(this)" style="width:72px;border:none;background:transparent;font-size:12px;color:#ef4444;font-weight:700;text-align:center;padding:2px 4px">
+      <button onclick="document.getElementById('s-lt').value='';renderDrivers()" style="background:transparent;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:0 2px" title="مسح">✕</button>
     </span>
     <select class="fi" id="s-sort" onchange="renderDrivers()">
       <option value="completed" data-i18n="sort_completed">↓ الطلبات المكتملة</option><option value="hours" data-i18n="sort_hours">↓ ساعات العمل</option>
@@ -640,11 +644,16 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   <span style="font-size:11px;color:var(--txt3);font-weight:700">🔍 فلتر:</span>
   <span class="fsel" data-icon="🏙️" style="--c:#f97316"><select id="gf-city" onchange="renderGoals()"><option value="">كل المدن</option></select></span>
   <span class="fsel" data-icon="👤" style="--c:#a855f7"><select id="gf-sup" onchange="renderGoals()"><option value="">كل المشرفين</option></select></span>
-  <span class="fsel" data-icon="📊" style="--c:#22c55e"><select id="gf-status" onchange="renderGoals()">
-    <option value="">كل الحالات</option>
-    <option value="غير محقق">غير محقق</option>
-    <option value="محقق">محقق</option>
-  </select></span>
+  <span style="display:inline-flex;align-items:center;gap:4px;background:var(--s1);border:1.5px solid var(--brd);border-radius:var(--r2);padding:2px 8px;height:36px" id="gf-needs-wrap">
+    <span style="font-size:11px;color:var(--txt3);white-space:nowrap">يحتاج</span>
+    <select id="gf-needs-op" onchange="renderGoals()" style="border:none;background:transparent;font-size:11px;color:var(--txt);padding:4px 2px;cursor:pointer;font-family:inherit">
+      <option value="">الكل</option>
+      <option value="lt">أقل من</option>
+      <option value="gt">أكثر من</option>
+    </select>
+    <input id="gf-needs-val" type="number" min="0" placeholder="0" oninput="renderGoals()"
+      style="width:55px;border:none;background:transparent;font-size:12px;color:var(--acc);font-weight:700;padding:2px 4px;text-align:center;font-family:inherit">
+  </span>
   <span class="fsel" data-icon="🚗" style="--c:#0ea5e9"><select id="gf-vehicle" onchange="renderGoals()">
     <option value="">كل المركبات</option>
     <option value="car">🚗 سيارة</option>
@@ -708,6 +717,29 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
     </tr></thead><tbody id="wknd-body"></tbody></table></div>
   </div>
 </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-h" style="flex-wrap:wrap;gap:8px">
+      <div class="card-t">📈 السائقون الواصلون</div>
+      <div style="display:flex;align-items:center;gap:6px;margin-right:auto">
+        <span style="font-size:11px;color:var(--txt3)">وصلوا</span>
+        <select id="reached-op" onchange="renderReached()" style="padding:4px 8px;border-radius:var(--r2);border:1.5px solid var(--brd);background:var(--s2);font-size:11px;color:var(--txt);font-family:inherit;cursor:pointer">
+          <option value="gt">أكثر من</option>
+          <option value="lt">أقل من</option>
+        </select>
+        <input id="reached-val" type="number" min="0" value="200" oninput="renderReached()"
+          style="width:70px;padding:4px 8px;border-radius:var(--r2);border:1.5px solid var(--acc);background:var(--s2);font-size:12px;color:var(--acc);font-weight:700;text-align:center;font-family:inherit">
+        <span style="font-size:11px;color:var(--txt3)">طلب</span>
+        <span class="pill grn" id="reached-count">—</span>
+      </div>
+    </div>
+    <div class="tw" style="max-height:320px">
+      <table><thead><tr>
+        <th>#</th><th class="td-l">الاسم</th><th>المشرف</th><th>المدينة</th><th>المركبة</th>
+        <th>منجز</th><th>الهدف</th><th>الحالة</th>
+      </tr></thead><tbody id="reached-body"></tbody></table>
+    </div>
+  </div>
 
 <!-- SUPERVISORS -->
 <div class="pane" id="pane-supervisors">
@@ -1668,16 +1700,18 @@ function renderDrivers() {
   const status = document.getElementById('s-status').value;
   const sort = document.getElementById('s-sort').value;
   const ltRaw = (document.getElementById('s-lt')||{}).value;
+  const ltOp  = (document.getElementById('s-lt-op')||{}).value || 'lt';
   const lt = ltRaw==='' || ltRaw===undefined ? null : parseInt(ltRaw,10);
 
   let list = DATA.drivers.filter(d =>
     (!search || d.name.toLowerCase().includes(search) || String(d.id).includes(search)) &&
     (!sup || d.supervisor === sup) && (!city || d.city === city) &&
     (!veh || d.vehicle === veh) && (!status || d.status === status) &&
-    (lt===null || (d.completed||0) < lt)
+    (lt===null || (ltOp==='lt' ? (d.completed||0) < lt : (d.completed||0) > lt))
   ).sort((a,b) => sort === 'wallet' ? (a[sort]||0) - (b[sort]||0) : (b[sort]||0) - (a[sort]||0));
 
-  const cntTxt = list.length + ' ' + T('driver_unit') + (lt!==null?' · '+(lang==='ar'?'أقل من ':'< ')+lt:'');
+  const ltLabel = ltOp==='lt' ? (lang==='ar'?'أقل من ':'< ') : (lang==='ar'?'أكثر من ':'>');
+  const cntTxt = list.length + ' ' + T('driver_unit') + (lt!==null?' · '+ltLabel+lt:'');
   document.getElementById('drv-count').textContent = cntTxt;
 
   function ac(r) { return r >= 95 ? 'b-ok' : r >= 85 ? 'b-warn' : 'b-bad'; }
@@ -2076,6 +2110,39 @@ function recomputeWeekendAbsence() {
   }
 }
 
+function renderReached() {
+  const op  = (document.getElementById('reached-op')  || {}).value || 'gt';
+  const val = parseInt((document.getElementById('reached-val') || {}).value) || 0;
+  const drivers = getGoalsDrivers();  // city/sup/vehicle filters apply
+
+  const list = drivers.filter(d => {
+    const c = Number(d.completed) || 0;
+    return op === 'gt' ? c > val : c < val;
+  }).sort((a,b) => op === 'gt'
+    ? (Number(b.completed)||0) - (Number(a.completed)||0)
+    : (Number(a.completed)||0) - (Number(b.completed)||0)
+  );
+
+  const countEl = document.getElementById('reached-count');
+  const bodyEl  = document.getElementById('reached-body');
+  if (!countEl || !bodyEl) return;
+
+  countEl.textContent = list.length + ' سائق';
+  bodyEl.innerHTML = list.length ? list.map((d,i) => {
+    const achieved = d.status === 'محقق';
+    return '<tr onclick="openProfile(' + d.id + ');showTab(\'drivers\',document.querySelectorAll(\'.tab\')[2])" style="cursor:pointer">' +
+      '<td class="n">' + (i+1) + '</td>' +
+      '<td class="td-l td-name">' + d.name + '</td>' +
+      '<td style="color:var(--pur2);font-size:10.5px">' + (d.supervisor||'—') + '</td>' +
+      '<td style="color:var(--acc);font-size:10.5px">' + cityLabel(d.city) + '</td>' +
+      '<td style="font-size:10.5px">' + (d.vehicle==='car'?'🚗':'🛵') + '</td>' +
+      '<td style="color:var(--grn2);font-weight:700">' + (d.completed||0) + '</td>' +
+      '<td style="color:var(--txt2)">' + (d.target||'—') + '</td>' +
+      '<td><span class="b ' + (achieved?'b-ok':'b-warn') + '">' + (achieved?'✅ محقق':'⏳ غير محقق') + '</span></td>' +
+      '</tr>';
+  }).join('') : '<tr><td colspan="8" class="empty">لا يوجد سائقون</td></tr>';
+}
+
 function populateGoalsFilters() {
   const cities = [...new Set(DATA.drivers.map(d => d.city).filter(Boolean))].sort();
   const sups   = [...new Set(DATA.drivers.map(d => d.supervisor).filter(Boolean))].sort();
@@ -2091,27 +2158,37 @@ function populateGoalsFilters() {
 function resetGoalsFilter() {
   const c = document.getElementById('gf-city');
   const s = document.getElementById('gf-sup');
-  const st = document.getElementById('gf-status');
   const v = document.getElementById('gf-vehicle');
+  const nop = document.getElementById('gf-needs-op');
+  const nval = document.getElementById('gf-needs-val');
   if (c) c.value = '';
   if (s) s.value = '';
-  if (st) st.value = '';
   if (v) v.value = '';
-  [c,s,st,v].forEach(el => { if(el) el.closest('.fsel')?.classList.remove('has-value'); });
+  if (nop) nop.value = '';
+  if (nval) nval.value = '';
+  [c,s,v].forEach(el => { if(el) el.closest('.fsel')?.classList.remove('has-value'); });
+  if (document.getElementById('gf-needs-wrap')) document.getElementById('gf-needs-wrap').style.borderColor = 'var(--brd)';
   renderGoals();
 }
 
 function getGoalsDrivers() {
-  const city    = (document.getElementById('gf-city')    || {}).value || '';
-  const sup     = (document.getElementById('gf-sup')     || {}).value || '';
-  const status  = (document.getElementById('gf-status')  || {}).value || '';
-  const vehicle = (document.getElementById('gf-vehicle') || {}).value || '';
-  return DATA.drivers.filter(d =>
-    (!city    || d.city === city) &&
-    (!sup     || d.supervisor === sup) &&
-    (!status  || d.status === status) &&
-    (!vehicle || (d.vehicle||'').toLowerCase() === vehicle)
-  );
+  const city    = (document.getElementById('gf-city')     || {}).value || '';
+  const sup     = (document.getElementById('gf-sup')      || {}).value || '';
+  const vehicle = (document.getElementById('gf-vehicle')  || {}).value || '';
+  const needsOp = (document.getElementById('gf-needs-op') || {}).value || '';
+  const needsV  = parseInt((document.getElementById('gf-needs-val') || {}).value) || 0;
+  // highlight needs filter when active
+  const nwrap = document.getElementById('gf-needs-wrap');
+  if (nwrap) nwrap.style.borderColor = needsOp ? 'var(--acc)' : 'var(--brd)';
+  return DATA.drivers.filter(d => {
+    const needs = Number(d.needs) || 0;
+    if (city    && d.city !== city) return false;
+    if (sup     && d.supervisor !== sup) return false;
+    if (vehicle && (d.vehicle||'').toLowerCase() !== vehicle) return false;
+    if (needsOp === 'lt' && needsV && !(needs < needsV)) return false;
+    if (needsOp === 'gt' && needsV && !(needs > needsV)) return false;
+    return true;
+  });
 }
 
 function renderGoals() {
@@ -2132,7 +2209,7 @@ function renderGoals() {
     countEl.textContent = shown < total ? `يظهر ${shown} من ${total} سائق` : '';
   }
   // تمييز الفلاتر النشطة
-  ['gf-city','gf-sup','gf-status','gf-vehicle'].forEach(id => {
+  ['gf-city','gf-sup','gf-vehicle'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.closest('.fsel')?.classList.toggle('has-value', !!el.value);
   });
@@ -2231,6 +2308,7 @@ function renderGoals() {
     '<td><span class="b b-warn">' + d.wknd_absent + ' ' + T('day') + '</span></td>' +
     '<td style="color:var(--red);font-weight:700">' + (d.wknd_penalty||0).toLocaleString() + '</td></tr>'
   ).join('') : '<tr><td colspan="6" class="empty">' + T('empty_wknd') + '</td></tr>';
+  renderReached();
 }
 
 // ─── SUPERVISORS ──────────────────────────────────
@@ -2410,10 +2488,14 @@ buildMonthTabs();
     <select class="fi" id="s-status" onchange="renderDrivers()">
       <option value="" id="opt-allstatus">كل الحالات</option><option value="محقق" id="opt-achieved">✅ محقق</option><option value="غير محقق" id="opt-notachieved">❌ غير محقق</option>
     </select>
-    <span class="fsel" data-icon="📦" style="--c:#ef4444;display:inline-flex;align-items:center;gap:4px">
-      <span style="font-size:10.5px;color:var(--txt3);font-weight:700;padding:0 4px" id="s-lt-lbl" data-i18n="lbl_threshold">طلبات أقل من:</span>
-      <input class="fi" type="number" id="s-lt" placeholder="مثال: 300" min="0" step="10" oninput="renderDrivers();markFilter(this)" style="width:100px;border-color:#ef4444">
-      <button class="rbtn" onclick="document.getElementById('s-lt').value='';markFilter(document.getElementById('s-lt'));renderDrivers()" style="background:transparent;border:1px solid var(--brd);padding:6px 8px;font-size:11px" title="مسح">✕</button>
+    <span style="display:inline-flex;align-items:center;gap:4px;background:var(--s1);border:1.5px solid #ef4444;border-radius:var(--r2);padding:2px 8px;height:36px" id="s-lt-wrap">
+      <span style="font-size:10.5px;color:var(--txt3);font-weight:700;white-space:nowrap">طلبات</span>
+      <select id="s-lt-op" onchange="renderDrivers()" style="border:none;background:transparent;font-size:11px;color:var(--txt);padding:4px 2px;cursor:pointer;font-family:inherit">
+        <option value="lt">أقل من</option>
+        <option value="gt">أكثر من</option>
+      </select>
+      <input class="fi" type="number" id="s-lt" placeholder="300" min="0" step="10" oninput="renderDrivers();markFilter(this)" style="width:72px;border:none;background:transparent;font-size:12px;color:#ef4444;font-weight:700;text-align:center;padding:2px 4px">
+      <button onclick="document.getElementById('s-lt').value='';renderDrivers()" style="background:transparent;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:0 2px" title="مسح">✕</button>
     </span>
     <select class="fi" id="s-sort" onchange="renderDrivers()">
       <option value="completed" data-i18n="sort_completed">↓ الطلبات المكتملة</option><option value="hours" data-i18n="sort_hours">↓ ساعات العمل</option>
