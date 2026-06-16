@@ -718,34 +718,30 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   </div>
 </div>
 
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-h" style="flex-wrap:wrap;gap:8px">
-      <div class="card-t">📈 السائقون الواصلون</div>
-      <div style="display:flex;align-items:center;gap:6px;margin-right:auto">
-        <span style="font-size:11px;color:var(--txt3)">وصلوا</span>
-        <select id="reached-op" onchange="renderReached()" style="padding:4px 8px;border-radius:var(--r2);border:1.5px solid var(--brd);background:var(--s2);font-size:11px;color:var(--txt);font-family:inherit;cursor:pointer">
-          <option value="gt">أكثر من</option>
-          <option value="lt">أقل من</option>
-        </select>
-        <input id="reached-val" type="number" min="0" value="200" oninput="renderReached()"
-          style="width:70px;padding:4px 8px;border-radius:var(--r2);border:1.5px solid var(--acc);background:var(--s2);font-size:12px;color:var(--acc);font-weight:700;text-align:center;font-family:inherit">
-        <span style="font-size:11px;color:var(--txt3)">طلب</span>
-        <span class="pill grn" id="reached-count">—</span>
-      </div>
-    </div>
-    <div class="tw" style="max-height:320px">
-      <table><thead><tr>
-        <th>#</th><th class="td-l">الاسم</th><th>المشرف</th><th>المدينة</th><th>المركبة</th>
-        <th>منجز</th><th>الهدف</th><th>الحالة</th>
-      </tr></thead><tbody id="reached-body"></tbody></table>
-    </div>
-  </div>
 
 <!-- SUPERVISORS -->
 <div class="pane" id="pane-supervisors">
-  <div class="card">
-    <div class="card-h"><div class="card-t" id="ct-supperf">👤 أداء <em>المشرفين</em></div></div>
-    <div class="sup-grid" id="sup-grid"></div>
+  <div id="spv-cards-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px"></div>
+  <div id="spv-cmp-ach-wrap" style="margin-bottom:20px">
+    <div class="card-h" style="margin-bottom:10px"><div class="card-t">🏆 التغيير في التحقيق — أمس ← اليوم</div></div>
+    <div id="spv-cmp-ach" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+  </div>
+  <div id="spv-cmp-ord-wrap" style="margin-bottom:20px">
+    <div class="card-h" style="margin-bottom:10px"><div class="card-t">📦 التغيير في الإنتاج — أمس ← اليوم</div></div>
+    <div id="spv-cmp-ord" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+  </div>
+  <div id="spv-detail-panels"></div>
+  <div>
+    <div class="card-h" style="margin-bottom:10px"><div class="card-t">📋 مقارنة شاملة بين المشرفين</div></div>
+    <div style="overflow-x:auto"><table class="tbl" id="spv-main-tbl" style="width:100%">
+      <thead><tr>
+        <th>الترتيب</th><th>المشرف</th><th>المناديب</th>
+        <th>نسبة المحققين</th><th>متوسط الطلبات</th>
+        <th>معدل القبول</th><th>متوسط الساعات</th>
+        <th>إجمالي الغياب</th><th>غياب ويكند</th><th>يحتاج متابعة</th>
+      </tr></thead>
+      <tbody id="spv-tbl-body"></tbody>
+    </table></div>
   </div>
 </div>
 
@@ -2312,37 +2308,177 @@ function renderGoals() {
 }
 
 // ─── SUPERVISORS ──────────────────────────────────
-function renderSupervisors() {
-  const supMap = {};
-  DATA.drivers.forEach(d => {
-    const k = d.supervisor || 'بدون مشرف';
-    if (!supMap[k]) supMap[k] = {count:0,completed:0,absent:0,hours:0,acc:0};
-    supMap[k].count++; supMap[k].completed += d.completed;
-    supMap[k].absent += d.absent; supMap[k].hours += d.hours;
-    supMap[k].acc += d.acceptance_rate;
-  });
-  const sups = Object.entries(supMap).sort((a,b) => b[1].completed - a[1].completed);
-  const maxC = sups[0]?.[1]?.completed || 1;
+const SPV_COLORS_MAP = {
+  'Mustafa & Mariam':'#10b981','Mahdi & Rania':'#3b82f6',
+  'Opu & Assma':'#f97316','Bissam':'#ef4444'
+};
+const SPV_AV = {'Mustafa & Mariam':'MS','Mahdi & Rania':'MR','Opu & Assma':'OA','Bissam':'BS'};
+const SPV_GRADES = ['A','B','C','D'];
+const SPV_MEDALS = ['🥇','🥈','🥉','4️⃣'];
+const SPV_GRADE_CSS = {'A':'#10b981','B':'#3b82f6','C':'#f97316','D':'#ef4444'};
+// أرقام يوم أمس المؤكدة
+const D14_ACH = {'Mustafa & Mariam':29,'Mahdi & Rania':17,'Opu & Assma':21,'Bissam':0};
 
-  document.getElementById('sup-grid').innerHTML = sups.map(([name,s],i) => {
-    const avgAcc = (s.acc/s.count).toFixed(1);
-    const avgComp = (s.completed/s.count).toFixed(0);
-    const col = SUP_COLORS[i % SUP_COLORS.length];
-    return '<div class="sup-card">' +
-      '<div class="sup-hdr"><div class="sup-dot" style="background:' + col + '"></div>' +
-      '<div class="sup-name">' + name + '</div>' +
-      '<div class="sup-count">' + s.count + ' ' + T('sup_drivers') + '</div></div>' +
-      [[T('k_orders'), s.completed.toLocaleString(), col],
-       [T('stat_avg_per'), avgComp, 'var(--txt)'],
-       [T('k_acc'), avgAcc+'%', avgAcc>=95?'var(--grn)':'var(--yel)'],
-       [T('stat_total_absent'), s.absent+' '+T('day'), s.absent>10?'var(--red)':'var(--yel)'],
-       [T('p_total_hours'), s.hours.toFixed(0)+'h', 'var(--txt)']
-      ].map(([k,v,c]) =>
-        '<div class="sup-row"><span class="sup-key">' + k + '</span><span class="sup-val" style="color:' + c + '">' + v + '</span></div>'
-      ).join('') +
-      '<div class="sup-bar"><div class="sup-bar-fill" style="width:' + (s.completed/maxC*100).toFixed(0) + '%;--c:' + col + '"></div></div>' +
-      '</div>';
+function spvPcol(p){ return p>=70?'#10b981':p>=45?'#f59e0b':'#ef4444'; }
+
+function renderSupervisors() {
+  // ── تجميع البيانات
+  const spvMap = {};
+  DATA.drivers.forEach(d => {
+    const k = d.supervisor||'بدون مشرف';
+    if(!spvMap[k]) spvMap[k]={drivers:[],total:0,ach15:0,avg_ord:0,avg_hpd:0,avg_ar:0,total_abs:0,wknd_abs:0,d14_tot:0,d15_tot:0};
+    const s=spvMap[k];
+    s.drivers.push(d); s.total++;
+    if(d.status==='محقق') s.ach15++;
+    s.avg_ord  += d.completed||0;
+    s.avg_hpd  += d.hours_per_day||0;
+    s.avg_ar   += d.acceptance_rate||0;
+    s.total_abs+= d.absent||0;
+    s.wknd_abs += d.wknd_absent||0;
+    const daily=d.daily||{};
+    s.d14_tot  += daily['14/06']||0;
+    s.d15_tot  += daily['15/06']||0;
+  });
+  Object.values(spvMap).forEach(s=>{
+    s.avg_ord=+(s.avg_ord/s.total).toFixed(1);
+    s.avg_hpd=+(s.avg_hpd/s.total).toFixed(1);
+    s.avg_ar =+(s.avg_ar /s.total).toFixed(1);
+    s.not_ach=s.total-s.ach15;
+    s.pct15=+(s.ach15/s.total*100).toFixed(1);
+    s.ach14 =D14_ACH[Object.keys(spvMap).find(k=>spvMap[k]===s)]||0;
+    s.pct14=+(s.ach14/s.total*100).toFixed(1);
+    s.d_pct =+(s.pct15-s.pct14).toFixed(1);
+    s.d_n   =s.ach15-s.ach14;
+    s.delta_ord=s.d15_tot-s.d14_tot;
+  });
+  // إعادة حساب ach14 بالـ key الصحيح
+  Object.entries(spvMap).forEach(([k,s])=>{
+    s.ach14=D14_ACH[k]||0;
+    s.pct14=+(s.ach14/s.total*100).toFixed(1);
+    s.d_pct=+(s.pct15-s.pct14).toFixed(1);
+    s.d_n  =s.ach15-s.ach14;
+  });
+
+  const sorted = Object.entries(spvMap).sort((a,b)=>b[1].pct15-a[1].pct15);
+  const gradeMap={};
+  sorted.forEach(([k],i)=>gradeMap[k]=SPV_GRADES[i]);
+  const curDay = (DATA.daily_dates||[]).length;
+
+  // ── CARDS
+  document.getElementById('spv-cards-grid').innerHTML = sorted.map(([name,s],i)=>{
+    const col=SPV_COLORS_MAP[name]||SUP_COLORS[i%SUP_COLORS.length];
+    const av=SPV_AV[name]||(name.substring(0,2).toUpperCase());
+    const gc=SPV_GRADE_CSS[SPV_GRADES[i]]||col;
+    const pc=spvPcol(s.pct15);
+    return `<div style="background:var(--card);border:1px solid var(--brd);border-radius:14px;padding:18px;cursor:pointer;position:relative;transition:.25s" onclick="spvToggle('${name.replace(/'/g,"\\'")}')">
+      <div style="position:absolute;top:10px;left:10px;font-size:18px">${SPV_MEDALS[i]}</div>
+      <div style="position:absolute;top:8px;right:10px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;background:${gc}22;color:${gc};border:2px solid ${gc}">${SPV_GRADES[i]}</div>
+      <div style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;margin:0 auto 10px;background:${col}22;color:${col};border:2px solid ${col}44">${av}</div>
+      <div style="text-align:center;font-weight:900;font-size:14px;margin-bottom:2px">${name}</div>
+      <div style="text-align:center;font-size:11px;color:var(--txt2);margin-bottom:12px">${s.total} مندوب</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+        <div style="background:var(--bg);border-radius:7px;padding:7px;text-align:center"><div style="font-size:17px;font-weight:900">${s.avg_ord}</div><div style="font-size:10px;color:var(--txt2)">متوسط طلبات</div></div>
+        <div style="background:var(--bg);border-radius:7px;padding:7px;text-align:center"><div style="font-size:17px;font-weight:900;color:${pc}">${s.pct15}%</div><div style="font-size:10px;color:var(--txt2)">المحققين</div></div>
+        <div style="background:var(--bg);border-radius:7px;padding:7px;text-align:center"><div style="font-size:17px;font-weight:900;color:#ef4444">${s.not_ach}</div><div style="font-size:10px;color:var(--txt2)">يحتاج متابعة</div></div>
+        <div style="background:var(--bg);border-radius:7px;padding:7px;text-align:center"><div style="font-size:17px;font-weight:900">${s.avg_hpd}</div><div style="font-size:10px;color:var(--txt2)">ساعات/يوم</div></div>
+      </div></div>`;
   }).join('');
+
+  // ── COMPARISON HELPER
+  function cmpCard(name,s,mode){
+    const col=SPV_COLORS_MAP[name]||'#94a3b8';
+    const grade=gradeMap[name]||'';
+    const gc=SPV_GRADE_CSS[grade]||col;
+    let dlt,dltStr,before,after;
+    if(mode==='ach'){
+      dlt=s.d_pct; dltStr=`${dlt>0?'+':''}${dlt.toFixed(1)}% | ${s.d_n>0?'+':''}${s.d_n} مندوب`;
+      before=`${s.pct14}% (${s.ach14} مندوب)`; after=`${s.pct15}% (${s.ach15} مندوب)`;
+    } else {
+      dlt=s.delta_ord; dltStr=`${dlt>0?'+':''}${dlt} طلب`;
+      before=`${s.d14_tot} طلب`; after=`${s.d15_tot} طلب`;
+    }
+    const ic=dlt>0?'📈':dlt<0?'📉':'➖';
+    const bg=dlt>0?'rgba(16,185,129,.08)':dlt<0?'rgba(239,68,68,.08)':'rgba(100,116,139,.06)';
+    const br=dlt>0?'rgba(16,185,129,.25)':dlt<0?'rgba(239,68,68,.25)':'rgba(100,116,139,.2)';
+    const dc=dlt>0?'#10b981':dlt<0?'#ef4444':'#64748b';
+    return `<div style="border-radius:11px;padding:13px 15px;display:flex;align-items:flex-start;gap:10px;background:${bg};border:1px solid ${br}">
+      <div style="font-size:26px;flex-shrink:0;margin-top:2px">${ic}</div>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:${col};margin-bottom:2px">${name}
+          <span style="display:inline-flex;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;font-size:10px;font-weight:900;background:${gc}22;color:${gc};border:1px solid ${gc};vertical-align:middle;margin-right:3px">${grade}</span></div>
+        <div style="font-size:18px;font-weight:900;color:${dc};margin:3px 0">${dltStr}</div>
+        <div style="font-size:10px;color:var(--txt2)">يوم ${curDay-1}: ${before} ← يوم ${curDay}: ${after}</div>
+      </div></div>`;
+  }
+
+  const sortedAch=Object.entries(spvMap).sort((a,b)=>b[1].d_pct-a[1].d_pct);
+  const sortedOrd=Object.entries(spvMap).sort((a,b)=>b[1].delta_ord-a[1].delta_ord);
+  document.getElementById('spv-cmp-ach').innerHTML=sortedAch.map(([n,s])=>cmpCard(n,s,'ach')).join('');
+  document.getElementById('spv-cmp-ord').innerHTML=sortedOrd.map(([n,s])=>cmpCard(n,s,'ord')).join('');
+
+  // ── MAIN TABLE
+  document.getElementById('spv-tbl-body').innerHTML=sorted.map(([name,s],i)=>{
+    const col=SPV_COLORS_MAP[name]||SUP_COLORS[i%SUP_COLORS.length];
+    const pc=spvPcol(s.pct15);
+    const bw=Math.min(s.pct15,100); const ob=Math.min(s.avg_ord/300*100,100);
+    return `<tr>
+      <td><strong style="color:${col}">${SPV_MEDALS[i]}</strong></td>
+      <td><strong style="color:${col}">${name}</strong></td>
+      <td style="text-align:center">${s.total}</td>
+      <td><div style="display:flex;align-items:center;gap:7px">
+        <div style="flex:1;background:var(--brd);border-radius:3px;height:5px"><div style="width:${bw}%;height:5px;border-radius:3px;background:${pc}"></div></div>
+        <span style="color:${pc};font-weight:700;white-space:nowrap">${s.pct15}% <small style="color:var(--txt2)">(${s.ach15}/${s.total})</small></span>
+      </div></td>
+      <td><div style="display:flex;align-items:center;gap:7px">
+        <div style="flex:1;background:var(--brd);border-radius:3px;height:5px"><div style="width:${ob.toFixed(0)}%;height:5px;border-radius:3px;background:${col}"></div></div>
+        <span style="font-weight:700">${s.avg_ord}</span>
+      </div></td>
+      <td style="text-align:center;color:#10b981;font-weight:700">${s.avg_ar}%</td>
+      <td style="text-align:center">${s.avg_hpd}</td>
+      <td style="text-align:center">${s.total_abs}</td>
+      <td style="text-align:center">${s.wknd_abs}</td>
+      <td style="text-align:center;color:#ef4444;font-weight:700">${s.not_ach}</td>
+    </tr>`;
+  }).join('');
+
+  // ── DETAIL PANELS
+  document.getElementById('spv-detail-panels').innerHTML=sorted.map(([name,s])=>{
+    const col=SPV_COLORS_MAP[name]||'#94a3b8';
+    const pid='spvdp-'+name.replace(/[^a-z0-9]/gi,'_');
+    const drows=s.drivers.filter(d=>d.status!=='محقق').sort((a,b)=>(b.completed||0)-(a.completed||0)).map(d=>{
+      const sc=d.status==='محقق'?'#10b981':'#ef4444';
+      const needs=d.needs||0;
+      const nc=d.status==='محقق'?'':`<span style="color:${needs<=50?'#f59e0b':'#ef4444'}">${needs}</span>`;
+      const d14v=(d.daily||{})['14/06']||0, d15v=(d.daily||{})['15/06']||0, diff=d15v-d14v;
+      const dc=diff>0?'#10b981':diff<0?'#ef4444':'#64748b';
+      return `<tr><td>${d.name}</td><td style="text-align:center">${d.completed||0}</td>
+        <td><span style="color:${sc};font-size:11px;font-weight:700">${d.status||''}</span></td>
+        <td style="text-align:center">${nc}</td>
+        <td style="text-align:center;color:${(d.acceptance_rate||0)>=99?'#10b981':(d.acceptance_rate||0)>=95?'#f59e0b':'#ef4444'}">${(d.acceptance_rate||0).toFixed(1)}%</td>
+        <td style="text-align:center">${d14v}</td><td style="text-align:center">${d15v}</td>
+        <td style="text-align:center;color:${dc}">${diff>0?'+':''}${diff}</td>
+        <td style="font-size:11px;color:var(--txt2)">${d.city||''}</td></tr>`;
+    }).join('');
+    return `<div id="${pid}" style="display:none;background:var(--card);border:1px solid var(--brd);border-radius:11px;margin-bottom:14px;overflow:hidden">
+      <div style="padding:11px 15px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-weight:900;color:${col}">${name}</span>
+        <span style="font-size:12px;color:var(--txt2)">${s.total} مندوب — محقق: ${s.ach15} (${s.pct15}%) — يحتاج: ${s.not_ach}</span>
+        <button onclick="spvToggle('${name.replace(/'/g,"\\'")}',true)" style="margin-right:auto;background:var(--brd);border:none;border-radius:5px;color:var(--txt2);width:24px;height:24px;cursor:pointer;font-size:13px">×</button>
+      </div>
+      <div style="overflow-x:auto"><table class="tbl" style="width:100%">
+        <thead><tr><th>الاسم</th><th>الطلبات</th><th>الحالة</th><th>متبقي</th><th>القبول</th><th>أمس</th><th>اليوم</th><th>الفرق</th><th>المدينة</th></tr></thead>
+        <tbody>${drows}</tbody>
+      </table></div></div>`;
+  }).join('');
+}
+
+function spvToggle(name, forceClose){
+  const pid='spvdp-'+name.replace(/[^a-z0-9]/gi,'_');
+  const el=document.getElementById(pid);
+  if(!el) return;
+  const isOpen=el.style.display!=='none';
+  document.querySelectorAll('[id^="spvdp-"]').forEach(p=>p.style.display='none');
+  if(!isOpen && !forceClose){ el.style.display='block'; el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
 }
 
 // ─── NEEDS ─────────────────────────────────────────
@@ -2692,9 +2828,27 @@ buildMonthTabs();
 
 <!-- SUPERVISORS -->
 <div class="pane" id="pane-supervisors">
-  <div class="card">
-    <div class="card-h"><div class="card-t" id="ct-supperf">👤 أداء <em>المشرفين</em></div></div>
-    <div class="sup-grid" id="sup-grid"></div>
+  <div id="spv-cards-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px"></div>
+  <div id="spv-cmp-ach-wrap" style="margin-bottom:20px">
+    <div class="card-h" style="margin-bottom:10px"><div class="card-t">🏆 التغيير في التحقيق — أمس ← اليوم</div></div>
+    <div id="spv-cmp-ach" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+  </div>
+  <div id="spv-cmp-ord-wrap" style="margin-bottom:20px">
+    <div class="card-h" style="margin-bottom:10px"><div class="card-t">📦 التغيير في الإنتاج — أمس ← اليوم</div></div>
+    <div id="spv-cmp-ord" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+  </div>
+  <div id="spv-detail-panels"></div>
+  <div>
+    <div class="card-h" style="margin-bottom:10px"><div class="card-t">📋 مقارنة شاملة بين المشرفين</div></div>
+    <div style="overflow-x:auto"><table class="tbl" id="spv-main-tbl" style="width:100%">
+      <thead><tr>
+        <th>الترتيب</th><th>المشرف</th><th>المناديب</th>
+        <th>نسبة المحققين</th><th>متوسط الطلبات</th>
+        <th>معدل القبول</th><th>متوسط الساعات</th>
+        <th>إجمالي الغياب</th><th>غياب ويكند</th><th>يحتاج متابعة</th>
+      </tr></thead>
+      <tbody id="spv-tbl-body"></tbody>
+    </table></div>
   </div>
 </div>
 
