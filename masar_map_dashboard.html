@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<script>if(sessionStorage.getItem('auth')!=='ok')location.replace('index.html');</script>
+<script>if(localStorage.getItem('auth_date')!==new Date().toDateString())location.replace('index.html');</script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>مسار ماب — داشبورد المتابعة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">

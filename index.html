@@ -97,7 +97,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 </div>
 <script>
 (function(){
-  if(sessionStorage.getItem('auth')==='ok'){
+  var d=localStorage.getItem('auth_date');
+  if(d===new Date().toDateString()){
     document.getElementById('login-overlay').style.display='none';
   }
 })();
@@ -105,7 +106,7 @@ function doLogin(){
   var u=document.getElementById('inp-user').value.trim();
   var p=document.getElementById('inp-pass').value;
   if(u==='Sahm' && p==='Data777$'){
-    sessionStorage.setItem('auth','ok');
+    localStorage.setItem('auth_date', new Date().toDateString());
     document.getElementById('login-overlay').style.display='none';
   } else {
     document.getElementById('login-err').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
