@@ -69,9 +69,52 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes fade{to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+/* ── Login ── */
+#login-overlay{position:fixed;inset:0;z-index:9999;background:#070809;display:flex;align-items:center;justify-content:center}
+#login-box{background:#101319;border:1px solid #1e2530;border-radius:24px;padding:48px 44px;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px rgba(249,115,22,.08)}
+#login-box .logo{font-size:42px;margin-bottom:16px}
+#login-box h2{font-size:22px;font-weight:900;margin-bottom:6px;color:#e2e8f0}
+#login-box p{font-size:12px;color:#5b6675;margin-bottom:32px;letter-spacing:2px}
+#login-box input{width:100%;background:#070809;border:1px solid #1e2530;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s}
+#login-box input:focus{border-color:#f97316}
+#login-box button{width:100%;padding:13px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:10px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.25s;margin-top:4px}
+#login-box button:hover{opacity:.88}
+#login-err{color:#ef4444;font-size:13px;margin-top:12px;min-height:20px}
 </style>
 </head>
 <body>
+<!-- Login overlay -->
+<div id="login-overlay">
+  <div id="login-box">
+    <div class="logo">🔐</div>
+    <h2>مركز المتابعة</h2>
+    <p>DELIVERY OPERATIONS — RESTRICTED</p>
+    <input type="text" id="inp-user" placeholder="اسم المستخدم" autocomplete="username" />
+    <input type="password" id="inp-pass" placeholder="كلمة المرور" autocomplete="current-password" />
+    <button onclick="doLogin()">دخول</button>
+    <div id="login-err"></div>
+  </div>
+</div>
+<script>
+(function(){
+  if(sessionStorage.getItem('auth')==='ok'){
+    document.getElementById('login-overlay').style.display='none';
+  }
+})();
+function doLogin(){
+  var u=document.getElementById('inp-user').value.trim();
+  var p=document.getElementById('inp-pass').value;
+  if(u==='Sahm' && p==='Data777$'){
+    sessionStorage.setItem('auth','ok');
+    document.getElementById('login-overlay').style.display='none';
+  } else {
+    document.getElementById('login-err').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
+    document.getElementById('inp-pass').value='';
+    document.getElementById('inp-pass').focus();
+  }
+}
+document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+</script>
 <div class="wrap">
   <div class="brand">DELIVERY OPERATIONS</div>
   <div class="title">مركز <span class="o">المتابعة</span> <span class="y">الحية</span></div>
@@ -82,7 +125,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="pname">هنقر</div>
       <div class="pdesc">HungerStation — متابعة الأداء والأهداف</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">118</div><div class="stat-l">سائق</div></div>
+        <div class="stat"><div class="stat-v">128</div><div class="stat-l">سائق</div></div>
         <div class="stat"><div class="stat-v">يوليو</div><div class="stat-l">الشهر الحالي</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
@@ -112,7 +155,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="pname">مسار ماب</div>
       <div class="pdesc">HungerStation — فرع مسار ماب</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">13</div><div class="stat-l">سائق</div></div>
+        <div class="stat"><div class="stat-v">14</div><div class="stat-l">سائق</div></div>
         <div class="stat"><div class="stat-v">يوليو</div><div class="stat-l">الشهر الحالي</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
@@ -128,7 +171,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
       <div class="go">🔒 دخول <span>←</span></div>
     </a>
   </div>
-  <div class="foot">📅 آخر تحديث: 02/07/2026 — البيانات من Google Drive</div>
+  <div class="foot">📅 آخر تحديث: 04/07/2026 — البيانات من Google Drive</div>
 </div>
 </body>
 </html>
