@@ -76,7 +76,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 #login-box h2{font-size:22px;font-weight:900;margin-bottom:6px;color:#e2e8f0}
 #login-box p{font-size:12px;color:#5b6675;margin-bottom:32px;letter-spacing:2px}
 #login-box input{width:100%;background:#070809;border:1px solid #1e2530;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s}
-#login-box input:focus{border-color:#f97316}
+#login-box input:focus,#login-box select:focus{border-color:#f97316}
 #login-box button{width:100%;padding:13px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:10px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.25s;margin-top:4px}
 #login-box button:hover{opacity:.88}
 #login-err{color:#ef4444;font-size:13px;margin-top:12px;min-height:20px}
@@ -89,7 +89,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <div class="logo">🔐</div>
     <h2>مركز المتابعة</h2>
     <p>DELIVERY OPERATIONS — RESTRICTED</p>
-    <input type="text" id="inp-user" placeholder="اسم المستخدم" autocomplete="username" />
+    <select id="inp-user" style="width:100%;background:#070809;border:1px solid #1e2530;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s;-webkit-appearance:none;appearance:none">
+  <option value="" disabled selected style="color:#5b6675">اختر اسمك</option>
+  <option>Mahdi</option>
+  <option>Rania</option>
+  <option>Mustafa</option>
+  <option>Mariam</option>
+  <option>Opu</option>
+  <option>Assma</option>
+  <option>Bissam</option>
+  <option>Abo IYAD</option>
+</select>
     <input type="password" id="inp-pass" placeholder="كلمة المرور" autocomplete="current-password" />
     <button onclick="doLogin()">دخول</button>
     <div id="login-err"></div>
@@ -99,19 +109,25 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 (function(){
   var d=localStorage.getItem('auth_date');
   if(d===new Date().toDateString()){
+    if(!localStorage.getItem('dash_user')) localStorage.setItem('dash_user','Sahm');
     document.getElementById('login-overlay').style.display='none';
+    document.addEventListener('DOMContentLoaded', function(){showAnalyticsBtn();});
   }
 })();
 function doLogin(){
   var u=document.getElementById('inp-user').value.trim();
   var p=document.getElementById('inp-pass').value;
-  if(u==='Sahm' && p==='Data777$'){
+  var valid=['Mahdi','Rania','Mustafa','Mariam','Opu','Assma','Bissam'];
+  var ok=(valid.indexOf(u)!==-1 && p==='Data777$')||(u==='Abo IYAD' && p==='Aboiyad7@');
+  if(ok){
     localStorage.setItem('auth_date', new Date().toDateString());
+    localStorage.setItem('dash_user', u);
     document.getElementById('login-overlay').style.display='none';
+    showAnalyticsBtn();
   } else {
     document.getElementById('login-err').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
     document.getElementById('inp-pass').value='';
-    document.getElementById('inp-pass').focus();
+    document.getElementById('inp-pass').value='';document.getElementById('inp-pass').focus();
   }
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
@@ -173,6 +189,67 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
     </a>
   </div>
   <div class="foot">📅 آخر تحديث: 09/07/2026 — البيانات من Google Drive</div>
+<button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
 </div>
+
+<!-- ── Analytics Modal ── -->
+<div id="anl-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(7,8,9,.97);overflow-y:auto;font-family:'Cairo',sans-serif;direction:rtl">
+  <div style="max-width:880px;margin:32px auto;padding:0 16px 40px">
+    <div style="background:#101319;border:1px solid #1e2530;border-radius:20px;padding:28px 32px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
+        <h2 style="font-size:20px;font-weight:900;color:#e2e8f0;margin:0">📊 سجل الزيارات</h2><a href='https://docs.google.com/spreadsheets/d/1ggds55EAI47UTP8i1IL9CSztHQmTqn8rztDAf3yVzCw/edit' target='_blank' style='background:#1e2530;border:1px solid #2a3344;border-radius:8px;padding:8px 18px;color:#22d3ee;font-family:Cairo,sans-serif;font-size:13px;text-decoration:none;white-space:nowrap'>📋 Google Sheet</a>
+        <div style="display:flex;gap:10px">
+          <button onclick="anl_clear()" style="background:#1e2530;border:1px solid #2a3344;border-radius:8px;padding:8px 18px;color:#94a3b8;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer">🗑 مسح السجل</button>
+          <button onclick="anl_close()" style="background:#1e2530;border:1px solid #2a3344;border-radius:8px;padding:8px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer">✕</button>
+        </div>
+      </div>
+      <div id="anl-summary" style="display:flex;gap:14px;margin-bottom:22px;flex-wrap:wrap"></div>
+      <div id="anl-table"></div>
+    </div>
+  </div>
+</div>
+<script>
+var PAGE_CLR={'هنقر':'249,115,22','كيتا':'234,179,8','مسار ماب':'14,165,233','المشرفون':'16,185,129','مقارنة':'168,85,247','الموظفين':'34,211,238','الرئيسية':'148,163,184'};
+function showAnalyticsBtn(){var u=localStorage.getItem("dash_user");var btn=document.getElementById("anl-btn");if(btn)btn.style.display=(u==="Abo IYAD")?"block":"none";}
+function anl_open(){document.getElementById('anl-modal').style.display='block';anl_render();}
+function anl_close(){document.getElementById('anl-modal').style.display='none';}
+function anl_clear(){if(confirm('مسح كل سجل الزيارات؟')){localStorage.removeItem('dash_visits');anl_render();}}
+function anl_render(){
+  var all=JSON.parse(localStorage.getItem('dash_visits')||'[]');
+  var log=all.slice().reverse();
+  var today=new Date().toDateString();
+  var todayN=log.filter(function(e){return new Date(e.ts).toDateString()===today;}).length;
+  var pc={};log.forEach(function(e){pc[e.page]=(pc[e.page]||0)+1;});
+  var top=Object.keys(pc).sort(function(a,b){return pc[b]-pc[a];})[0]||'—';
+  var cards=[{l:'إجمالي الزيارات',v:all.length,c:'#f97316'},{l:'زيارات اليوم',v:todayN,c:'#3498db'},{l:'أكثر صفحة',v:top,c:'#a855f7'}];
+  document.getElementById('anl-summary').innerHTML=cards.map(function(x){
+    return '<div style="background:#070809;border:1px solid #1e2530;border-radius:12px;padding:16px 20px;flex:1;min-width:130px;text-align:center">'+
+      '<div style="font-size:22px;font-weight:900;color:'+x.c+'">'+x.v+'</div>'+
+      '<div style="font-size:11px;color:#5b6675;margin-top:4px">'+x.l+'</div></div>';
+  }).join('');
+  if(!log.length){document.getElementById('anl-table').innerHTML='<div style="text-align:center;color:#5b6675;padding:40px;font-size:14px">لا توجد زيارات مسجلة بعد</div>';return;}
+  var rows=log.map(function(e){
+    var d=new Date(e.ts);
+    var dt=d.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'});
+    var tm=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    var rgb=PAGE_CLR[e.page]||'148,163,184';
+    return '<tr style="border-bottom:1px solid #1a2030">'+
+      '<td style="padding:10px 16px;color:#94a3b8;font-size:13px">'+dt+'</td>'+
+      '<td style="padding:10px 16px;color:#5b6675;font-size:13px">'+tm+'</td>'+
+      '<td style="padding:10px 16px;color:#e2e8f0;font-size:13px;font-weight:600">'+(e.user||'—')+'</td>'+
+      '<td style="padding:10px 16px"><span style="background:rgba('+rgb+',.14);color:rgb('+rgb+');padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">'+e.page+'</span></td>'+
+      '</tr>';
+  }).join('');
+  document.getElementById('anl-table').innerHTML=
+    '<table style="width:100%;border-collapse:collapse">'+
+    '<thead><tr style="border-bottom:2px solid #1e2530">'+
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">التاريخ</th>'+
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الوقت</th>'+
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">المستخدم</th>'+
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الصفحة</th>'+
+    '</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')anl_close();});
+</script>
 </body>
 </html>

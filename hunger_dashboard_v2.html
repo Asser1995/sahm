@@ -491,6 +491,16 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   </div>
 </div>
 
+<script>
+(function(){try{
+  var u=localStorage.getItem('dash_user')||'—';
+  var e={page:'هنقر',user:u,ts:new Date().toISOString()};
+  var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
+  l.push(e);if(l.length>2000)l=l.slice(-2000);
+  localStorage.setItem('dash_visits',JSON.stringify(l));
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('هنقر'),{mode:'no-cors'}).catch(function(){});
+}catch(x){}}());
+</script>
 
 <!-- DRIVERS -->
 <div class="pane" id="pane-drivers">
