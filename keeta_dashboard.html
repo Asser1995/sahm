@@ -214,6 +214,18 @@ td.n{color:var(--txt3);font-size:10px}
 .rpt-driver-header span{font-size:12px;color:var(--txt2)}.rpt-driver-header strong{color:var(--txt)}
 
 </style>
+<script>
+function _track(action,page){try{
+  var u=localStorage.getItem('dash_user')||'—';
+  var pg=page||'—';
+  var ts=new Date().toISOString();
+  var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
+  l.push({page:pg,user:u,action:action,ts:ts});
+  if(l.length>2000)l=l.slice(-2000);
+  localStorage.setItem('dash_visits',JSON.stringify(l));
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent(pg)+'&action='+encodeURIComponent(action),{mode:'no-cors'}).catch(function(){});
+}catch(x){}}
+</script>
 </head>
 <body>
 <div class="app">
@@ -694,6 +706,7 @@ function toggleLang(){
 }
 
 function showTab(id, btn){
+  _track("تبويب: "+(arguments[0]||""), "كيتا");
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.getElementById('pane-'+id).classList.add('on');
@@ -732,6 +745,7 @@ function buildMonthTabs(){
   });
 }
 function switchMonth(id){
+  _track("تبديل شهر: "+(arguments[0]||""), "كيتا");
   if(id===currentMonthId) return;
   currentMonthId = id;
   KEETA_DRIVE_ID = MONTHS_CONFIG.find(m=>m.id===id)?.drive_id || '';
@@ -981,6 +995,7 @@ function renderOrders(){
 }
 
 function openProfile(id){
+  _track("تفاصيل سائق", "كيتا");
   const d = DATA.drivers.find(x=>String(x.id)===String(id));
   if(!d) return;
   document.getElementById('m-name').textContent = d.name;
@@ -1182,7 +1197,7 @@ try { renderAll(); } catch(e) { console.error('Render error', e); }
   var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
   l.push(e);if(l.length>2000)l=l.slice(-2000);
   localStorage.setItem('dash_visits',JSON.stringify(l));
-  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('كيتا'),{mode:'no-cors'}).catch(function(){});
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('كيتا')+'&action='+encodeURIComponent('فتح الصفحة'),{mode:'no-cors',redirect:'follow'}).catch(function(){});
 }catch(x){}}());
 </script>
 </body>

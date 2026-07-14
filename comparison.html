@@ -104,6 +104,18 @@ tr:hover td{background:rgba(255,255,255,.03)}
 .empty-msg{text-align:center;padding:40px;color:var(--txt3);font-size:14px}
 .hidden{display:none!important}
 </style>
+<script>
+function _track(action,page){try{
+  var u=localStorage.getItem('dash_user')||'—';
+  var pg=page||'—';
+  var ts=new Date().toISOString();
+  var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
+  l.push({page:pg,user:u,action:action,ts:ts});
+  if(l.length>2000)l=l.slice(-2000);
+  localStorage.setItem('dash_visits',JSON.stringify(l));
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent(pg)+'&action='+encodeURIComponent(action),{mode:'no-cors'}).catch(function(){});
+}catch(x){}}
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -589,7 +601,7 @@ function printReport() {
 <h2>تقارير التطبيقات</h2>
 <div class="info">${driverHeader.innerHTML}</div>
 ${table.outerHTML}
-<script>window.onload=function(){window.print();window.close();}<\/script>
+<script>window.onload=function(){_track("طباعة التقرير","مقارنة");window.print();window.close();}<\/script>
 </body></html>`);
   w.document.close();
 }
@@ -612,7 +624,7 @@ const MASAR_DATA = {"07-2026": {"totals": {"orders": 2663, "drivers": 14, "month
   var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
   l.push(e);if(l.length>2000)l=l.slice(-2000);
   localStorage.setItem('dash_visits',JSON.stringify(l));
-  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('مقارنة'),{mode:'no-cors'}).catch(function(){});
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('مقارنة')+'&action='+encodeURIComponent('فتح الصفحة'),{mode:'no-cors',redirect:'follow'}).catch(function(){});
 }catch(x){}}());
 </script>
 </body>

@@ -383,6 +383,18 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
 .cls-D{background:#ef444422;color:#ef4444;border:1px solid #ef444455;border-radius:5px;padding:1px 7px;font-weight:900;font-size:11px}
 .cls-E{background:#8b5cf622;color:#8b5cf6;border:1px solid #8b5cf655;border-radius:5px;padding:1px 7px;font-weight:900;font-size:11px}
 </style>
+<script>
+function _track(action,page){try{
+  var u=localStorage.getItem('dash_user')||'—';
+  var pg=page||'—';
+  var ts=new Date().toISOString();
+  var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
+  l.push({page:pg,user:u,action:action,ts:ts});
+  if(l.length>2000)l=l.slice(-2000);
+  localStorage.setItem('dash_visits',JSON.stringify(l));
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent(pg)+'&action='+encodeURIComponent(action),{mode:'no-cors'}).catch(function(){});
+}catch(x){}}
+</script>
 </head>
 <body>
 <div class="tooltip" id="tt"></div>
@@ -498,7 +510,7 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
   l.push(e);if(l.length>2000)l=l.slice(-2000);
   localStorage.setItem('dash_visits',JSON.stringify(l));
-  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('مسار ماب'),{mode:'no-cors'}).catch(function(){});
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('مسار ماب')+'&action='+encodeURIComponent('فتح الصفحة'),{mode:'no-cors',redirect:'follow'}).catch(function(){});
 }catch(x){}}());
 </script>
 
@@ -2462,6 +2474,7 @@ function renderQuality() {
   }
 }
 function showTab(id, el) {
+  _track("تبويب: "+(arguments[0]||""), "مسار ماب");
   if(id==='quality') setTimeout(renderQuality,0);
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));

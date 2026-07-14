@@ -237,15 +237,17 @@ function anl_render(){
       '<td style="padding:10px 16px;color:#94a3b8;font-size:13px">'+dt+'</td>'+
       '<td style="padding:10px 16px;color:#5b6675;font-size:13px">'+tm+'</td>'+
       '<td style="padding:10px 16px;color:#e2e8f0;font-size:13px;font-weight:600">'+(e.user||'—')+'</td>'+
+      '<td style="padding:10px 16px;color:#22d3ee;font-size:12px">'+(e.action||'فتح الصفحة')+'</td>'+
       '<td style="padding:10px 16px"><span style="background:rgba('+rgb+',.14);color:rgb('+rgb+');padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">'+e.page+'</span></td>'+
       '</tr>';
   }).join('');
   document.getElementById('anl-table').innerHTML=
     '<table style="width:100%;border-collapse:collapse">'+
     '<thead><tr style="border-bottom:2px solid #1e2530">'+
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">التاريخ</th>'+
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">التاريخ</th>'+ 
     '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الوقت</th>'+
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">المستخدم</th>'+
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">المستخدم</th>'+ 
+    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الإجراء</th>'+
     '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الصفحة</th>'+
     '</tr></thead><tbody>'+rows+'</tbody></table>';
 }

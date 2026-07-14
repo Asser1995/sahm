@@ -251,6 +251,18 @@ tbody tr:hover{background:var(--card2)}
 .filter-label{font-size:11px;color:var(--txt3);white-space:nowrap}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script>
+function _track(action,page){try{
+  var u=localStorage.getItem('dash_user')||'—';
+  var pg=page||'—';
+  var ts=new Date().toISOString();
+  var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
+  l.push({page:pg,user:u,action:action,ts:ts});
+  if(l.length>2000)l=l.slice(-2000);
+  localStorage.setItem('dash_visits',JSON.stringify(l));
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent(pg)+'&action='+encodeURIComponent(action),{mode:'no-cors'}).catch(function(){});
+}catch(x){}}
+</script>
 </head>
 <body>
 
@@ -1027,7 +1039,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
   var l=JSON.parse(localStorage.getItem('dash_visits')||'[]');
   l.push(e);if(l.length>2000)l=l.slice(-2000);
   localStorage.setItem('dash_visits',JSON.stringify(l));
-  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('الموظفين'),{mode:'no-cors'}).catch(function(){});
+  fetch('https://script.google.com/macros/s/AKfycbxhQKF_yxf6HpTk06TVGqII_1JkI2dmm2Cy6Phbu1aPdezz6Fgp__B5MNdJ_VpRrNcR/exec?user='+encodeURIComponent(u)+'&page='+encodeURIComponent('الموظفين')+'&action='+encodeURIComponent('فتح الصفحة'),{mode:'no-cors',redirect:'follow'}).catch(function(){});
 }catch(x){}}());
 </script>
 </body>
