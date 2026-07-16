@@ -100,6 +100,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   <option>Bissam</option>
   <option>Abo IYAD</option>
   <option>Ceo</option>
+  <option>Nada</option>
 </select>
     <input type="password" id="inp-pass" placeholder="كلمة المرور" autocomplete="current-password" />
     <button onclick="doLogin()">دخول</button>
@@ -118,7 +119,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 function doLogin(){
   var u=document.getElementById('inp-user').value.trim();
   var p=document.getElementById('inp-pass').value;
-  var valid=['Mahdi','Rania','Mustafa','Mariam','Opu','Assma','Bissam'];
+  var valid=['Mahdi','Rania','Mustafa','Mariam','Opu','Assma','Bissam','Nada'];
   var ok=(valid.indexOf(u)!==-1 && p==='Data777$')||(u==='Abo IYAD' && p==='Aboiyad7@')||(u==='Ceo' && p==='Aa121314');
   if(ok){
     localStorage.setItem('auth_date', new Date().toDateString());
@@ -189,7 +190,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="go">🔒 دخول <span>←</span></div>
     </a>
   </div>
-  <div class="foot">📅 آخر تحديث: 15/07/2026 — البيانات من Google Drive</div>
+  <div class="foot">📅 آخر تحديث: 16/07/2026 — البيانات من Google Drive</div>
 <button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
 </div>
 
