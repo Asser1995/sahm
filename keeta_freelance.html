@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>كيتا فري لانسر — أغسطس 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0b0d;--card:#111418;--s2:#161a20;--brd:#252b34;--txt:#e5e7eb;--txt2:#8b95a3;--txt3:#5d6675;--acc:#eab308;--keeta:#facc15}
+body{background:var(--bg);color:var(--txt);font-family:'Cairo',sans-serif;min-height:100vh}
+.hdr{background:linear-gradient(180deg,#1a1c22,var(--card));border-bottom:1px solid var(--brd);padding:18px 24px}
+.hdr-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hdr-title{font-size:20px;font-weight:900;color:var(--keeta)}
+.hdr-sub{font-size:12px;color:var(--txt3);margin-top:2px}
+.hdr-badge{background:rgba(234,179,8,.12);color:var(--keeta);border:1px solid rgba(234,179,8,.3);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.back{margin-inline-start:auto;background:var(--s2);border:1px solid var(--brd);border-radius:8px;color:var(--txt2);font-size:12px;font-weight:700;padding:6px 14px;text-decoration:none;font-family:inherit}
+.back:hover{color:var(--txt);border-color:var(--txt3)}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;inset:0;border-inline-start:3px solid var(--acc);opacity:.6}
+.kpi.k-blue::before{border-color:#3b82f6}
+.kpi.k-green::before{border-color:#10b981}
+.kpi.k-red::before{border-color:#ef4444}
+.kpi.k-cyan::before{border-color:#06b6d4}
+.kpi-lbl{font-size:11px;color:var(--txt3);margin-bottom:6px;letter-spacing:.5px}
+.kpi-val{font-size:26px;font-weight:900;line-height:1}
+.kpi-sub{font-size:11px;color:var(--txt2);margin-top:4px}
+
+/* Filter bar */
+.fbar{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.fb-lbl{font-size:11px;color:var(--txt3);font-weight:700}
+.fb-btn{background:var(--s2);border:1px solid var(--brd);border-radius:7px;color:var(--txt2);font-size:12px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit}
+.fb-btn:hover{color:var(--txt);border-color:var(--txt3)}
+.fb-btn.active{background:var(--acc);border-color:var(--acc);color:#000}
+.fb-search{flex:1;min-width:180px;background:var(--s2);border:1px solid var(--brd);border-radius:8px;padding:8px 14px;color:var(--txt);font-family:inherit;font-size:13px;outline:none}
+.fb-search:focus{border-color:var(--acc)}
+.fb-sort{background:var(--s2);border:1px solid var(--brd);border-radius:7px;color:var(--txt);font-size:12px;padding:6px 12px;font-family:inherit;cursor:pointer;outline:none}
+
+/* Table */
+.tbl-wrap{background:var(--card);border:1px solid var(--brd);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--s2)}
+th{text-align:right;padding:12px 14px;font-size:11px;color:var(--txt3);font-weight:700;letter-spacing:.5px;border-bottom:1px solid var(--brd);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--brd);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(234,179,8,.04)}
+.rank{color:var(--txt3);font-weight:900;width:32px;text-align:center}
+.rank-1{color:#fbbf24}.rank-2{color:#94a3b8}.rank-3{color:#d97706}
+.name{font-weight:700;color:var(--txt)}
+.id{font-family:monospace;color:var(--txt3);font-size:11px}
+.city-p{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700}
+.city-Riyadh{background:rgba(6,182,212,.15);color:#06b6d4}
+.city-Dammam{background:rgba(168,85,247,.15);color:#a855f7}
+.city-غير{background:rgba(148,163,184,.15);color:#94a3b8}
+.num{font-weight:900;font-variant-numeric:tabular-nums}
+.n-hi{color:#10b981}.n-md{color:var(--acc)}.n-lo{color:#ef4444}
+.acc-bar{display:inline-flex;align-items:center;gap:6px}
+.acc-bar-bg{width:40px;height:5px;background:var(--s2);border-radius:3px;overflow:hidden}
+.acc-bar-fill{height:100%;border-radius:3px}
+.empty{padding:60px 20px;text-align:center;color:var(--txt3)}
+.foot{text-align:center;color:var(--txt3);font-size:11px;padding:24px 0 8px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:5px;margin-bottom:14px;width:fit-content}
+.tab{background:transparent;border:none;color:var(--txt2);font-size:13px;font-weight:700;padding:8px 18px;cursor:pointer;border-radius:8px;font-family:inherit;transition:.15s}
+.tab:hover{color:var(--txt)}
+.tab.active{background:var(--acc);color:#000}
+.view{display:none}
+.view.active{display:block}
+
+/* Daily matrix */
+.dmatrix-wrap{background:var(--card);border:1px solid var(--brd);border-radius:12px;overflow:auto;max-height:70vh}
+.dmatrix{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}
+.dmatrix thead th{position:sticky;top:0;background:var(--s2);z-index:2;padding:10px 8px;font-size:10px;text-align:center;border-bottom:1px solid var(--brd)}
+.dmatrix thead th:first-child{position:sticky;inset-inline-start:0;z-index:3;text-align:right;padding:10px 14px;min-width:180px}
+.dmatrix tbody td{padding:8px;border-bottom:1px solid rgba(37,43,52,.5);text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+.dmatrix tbody td:first-child{position:sticky;inset-inline-start:0;background:var(--card);z-index:1;text-align:right;padding:8px 14px;white-space:nowrap;border-inline-end:1px solid var(--brd)}
+.dmatrix tbody tr:hover td{background:rgba(234,179,8,.04)}
+.dmatrix tbody tr:hover td:first-child{background:#1a1e25}
+.cell-0{color:#3a3f48}
+.cell-l{color:#64748b}
+.cell-m{color:#eab308}
+.cell-h{color:#10b981;background:rgba(16,185,129,.06)}
+.cell-hh{color:#fff;background:rgba(16,185,129,.2);font-weight:900}
+.rej-dot{display:inline-block;width:5px;height:5px;background:#ef4444;border-radius:50%;margin-inline-start:3px;vertical-align:middle}
+.dmatrix tfoot td{background:var(--s2);font-size:11px;padding:10px 8px;text-align:center;font-weight:900;border-top:2px solid var(--brd)}
+.dmatrix tfoot td:first-child{text-align:right;padding:10px 14px;color:var(--txt3);letter-spacing:.5px}
+.dm-name{font-weight:700;color:var(--txt);font-size:13px}
+.dm-id{font-family:monospace;color:var(--txt3);font-size:10px;margin-top:1px}
+
+@media(max-width:640px){
+  th,td{padding:8px 10px;font-size:12px}
+  .hdr-title{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <span style="font-size:24px">🟡</span>
+    <div>
+      <div class="hdr-title">كيتا فري لانسر</div>
+      <div class="hdr-sub">أغسطس 2026 · بالطلب (بدون راتب / صلاحية)</div>
+    </div>
+    <span class="hdr-badge" id="hdr-day">يوم <span id="last-day">0</span></span>
+    <a class="back" href="index.html">← الرئيسية</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="kpi k-blue">
+      <div class="kpi-lbl">إجمالي السائقين</div>
+      <div class="kpi-val" id="kpi-riders">0</div>
+      <div class="kpi-sub" id="kpi-cities">— الرياض · — الدمام</div>
+    </div>
+    <div class="kpi k-green">
+      <div class="kpi-lbl">المهام المسلّمة</div>
+      <div class="kpi-val" id="kpi-del">0</div>
+      <div class="kpi-sub" id="kpi-avg">متوسط —/يوم</div>
+    </div>
+    <div class="kpi k-red">
+      <div class="kpi-lbl">المهام المرفوضة</div>
+      <div class="kpi-val" id="kpi-rej">0</div>
+      <div class="kpi-sub" id="kpi-rej-pct">— من الإجمالي</div>
+    </div>
+    <div class="kpi k-cyan">
+      <div class="kpi-lbl">نسبة القبول</div>
+      <div class="kpi-val" id="kpi-acc">—%</div>
+      <div class="kpi-sub">من إجمالي المهام</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-view="summary" onclick="setView('summary')">📊 الملخص</button>
+    <button class="tab" data-view="daily" onclick="setView('daily')">📅 الطلبات اليومية</button>
+  </div>
+
+  <!-- SUMMARY VIEW -->
+  <div class="view active" id="view-summary">
+    <div class="fbar">
+      <span class="fb-lbl">المدينة:</span>
+      <button class="fb-btn active" data-city="all" onclick="filterCity('all')">الكل</button>
+      <button class="fb-btn" data-city="Riyadh" onclick="filterCity('Riyadh')">الرياض</button>
+      <button class="fb-btn" data-city="Dammam" onclick="filterCity('Dammam')">الدمام</button>
+      <button class="fb-btn" data-city="غير محدد" onclick="filterCity('غير محدد')">غير محدد</button>
+      <input class="fb-search" id="search" type="text" placeholder="بحث بالاسم أو المعرف..." oninput="render()"/>
+      <select class="fb-sort" id="sort" onchange="render()">
+        <option value="delivered">ترتيب: مسلّم ↓</option>
+        <option value="rejected">مرفوض ↓</option>
+        <option value="acceptance">قبول% ↓</option>
+        <option value="days">أيام العمل ↓</option>
+        <option value="name">الاسم أ-ي</option>
+      </select>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="rank">#</th>
+            <th>السائق</th>
+            <th>المدينة</th>
+            <th style="text-align:center">المسلّم</th>
+            <th style="text-align:center">المرفوض</th>
+            <th style="text-align:center">القبول</th>
+            <th style="text-align:center">أيام</th>
+            <th style="text-align:center">متوسط/يوم</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty" id="empty" style="display:none">لا يوجد سائقون بالمعايير المختارة</div>
+    </div>
+  </div>
+
+  <!-- DAILY MATRIX VIEW -->
+  <div class="view" id="view-daily">
+    <div class="fbar">
+      <span class="fb-lbl">المدينة:</span>
+      <button class="fb-btn active" data-city-d="all" onclick="filterCityD('all')">الكل</button>
+      <button class="fb-btn" data-city-d="Riyadh" onclick="filterCityD('Riyadh')">الرياض</button>
+      <button class="fb-btn" data-city-d="Dammam" onclick="filterCityD('Dammam')">الدمام</button>
+      <button class="fb-btn" data-city-d="غير محدد" onclick="filterCityD('غير محدد')">غير محدد</button>
+      <input class="fb-search" id="search-d" type="text" placeholder="بحث بالاسم أو المعرف..." oninput="renderDaily()"/>
+      <span style="color:var(--txt3);font-size:11px;margin-inline-start:auto">
+        <span style="color:#10b981">■</span> مسلّم
+        <span style="color:#ef4444;margin-inline-start:8px">●</span> مرفوض
+      </span>
+    </div>
+
+    <div class="dmatrix-wrap">
+      <table class="dmatrix" id="dmatrix"></table>
+    </div>
+  </div>
+
+  <div class="foot">© 2026 Abu Iyad — All Rights Reserved</div>
+</div>
+
+<script>
+var curCityD = 'all';
+function setView(v){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('active', b.dataset.view === v)});
+  document.querySelectorAll('.view').forEach(function(x){x.classList.toggle('active', x.id === 'view-'+v)});
+  if(v === 'daily') renderDaily();
+}
+function filterCityD(c){
+  curCityD = c;
+  document.querySelectorAll('[data-city-d]').forEach(function(b){b.classList.toggle('active', b.dataset.cityD === c)});
+  renderDaily();
+}
+function cellCls(v, max){
+  if(v === 0) return 'cell-0';
+  var ratio = v/max;
+  if(ratio >= 0.8) return 'cell-hh';
+  if(ratio >= 0.5) return 'cell-h';
+  if(ratio >= 0.2) return 'cell-m';
+  return 'cell-l';
+}
+function renderDaily(){
+  var q = document.getElementById('search-d').value.trim().toLowerCase();
+  var list = DATA.riders.filter(function(r){
+    if(curCityD !== 'all' && r.city !== curCityD) return false;
+    if(q && !(r.name.toLowerCase().includes(q) || r.id.includes(q))) return false;
+    return true;
+  });
+  list.sort(function(a,b){return b.delivered - a.delivered});
+
+  var dates = DATA.dates;
+  // Find max delivered cell for coloring
+  var maxCell = 1;
+  list.forEach(function(r){
+    dates.forEach(function(d){
+      var v = (r.daily[d] || {}).d || 0;
+      if(v > maxCell) maxCell = v;
+    });
+  });
+
+  var head = '<thead><tr><th>السائق</th>';
+  dates.forEach(function(d){ head += '<th>'+d+'</th>'; });
+  head += '<th style="background:#252b34">الإجمالي</th></tr></thead>';
+
+  var body = '<tbody>';
+  var colTotalsDel = new Array(dates.length).fill(0);
+  var colTotalsRej = new Array(dates.length).fill(0);
+  list.forEach(function(r){
+    body += '<tr><td><div class="dm-name">'+r.name+'</div><div class="dm-id">'+r.iqama+'</div></td>';
+    dates.forEach(function(d, i){
+      var cell = r.daily[d] || {d:0, r:0};
+      var cls = cellCls(cell.d, maxCell);
+      colTotalsDel[i] += cell.d;
+      colTotalsRej[i] += cell.r;
+      var rejDot = cell.r > 0 ? '<span class="rej-dot" title="'+cell.r+' مرفوض"></span>' : '';
+      body += '<td class="'+cls+'">'+(cell.d || '·')+rejDot+'</td>';
+    });
+    body += '<td style="background:#1a1e25;color:#10b981">'+r.delivered.toLocaleString('en-US')+'</td>';
+    body += '</tr>';
+  });
+  body += '</tbody>';
+
+  var foot = '<tfoot><tr><td>إجمالي اليوم</td>';
+  var grand = 0;
+  colTotalsDel.forEach(function(v, i){
+    grand += v;
+    var rejPart = colTotalsRej[i] > 0 ? '<span style="color:#ef4444;font-size:10px"> ×'+colTotalsRej[i]+'</span>' : '';
+    foot += '<td style="color:#10b981">'+v+rejPart+'</td>';
+  });
+  foot += '<td style="color:#eab308">'+grand.toLocaleString('en-US')+'</td></tr></tfoot>';
+
+  document.getElementById('dmatrix').innerHTML = head + body + foot;
+}
+
+var DATA = {"month":"08-2026","dates":["01/08","02/08","03/08","04/08","05/08","06/08","07/08","08/08","09/08","10/08","11/08"],"totals":{"riders":65,"delivered":1601,"rejected":7,"days":11,"last_day":11,"riyadh":2,"dammam":24},"riders":[{"id":"1785590752257511","name":"BASSAM SALEM","iqama":"2446429983","city":"Dammam","delivered":180,"rejected":0,"total":180,"acceptance_rate":100.0,"work_days":7,"daily":{"11/08":{"d":25,"r":0},"10/08":{"d":26,"r":0},"09/08":{"d":31,"r":0},"08/08":{"d":28,"r":0},"07/08":{"d":27,"r":0},"06/08":{"d":27,"r":0},"05/08":{"d":16,"r":0}}},{"id":"1785589360222537","name":"MOHAAMMED TAHA","iqama":"2500963273","city":"Dammam","delivered":158,"rejected":0,"total":158,"acceptance_rate":100.0,"work_days":9,"daily":{"11/08":{"d":21,"r":0},"10/08":{"d":24,"r":0},"09/08":{"d":27,"r":0},"08/08":{"d":21,"r":0},"07/08":{"d":25,"r":0},"06/08":{"d":24,"r":0},"05/08":{"d":16,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0}}},{"id":"1785575842088699","name":"AHMED MOHAMMED","iqama":"2486205152","city":"Dammam","delivered":149,"rejected":0,"total":149,"acceptance_rate":100.0,"work_days":10,"daily":{"11/08":{"d":23,"r":0},"10/08":{"d":20,"r":0},"09/08":{"d":22,"r":0},"08/08":{"d":21,"r":0},"07/08":{"d":23,"r":0},"06/08":{"d":22,"r":0},"05/08":{"d":18,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0}}},{"id":"1785530887202765","name":"HAEL YAHYA","iqama":"2447128485","city":"Dammam","delivered":124,"rejected":0,"total":124,"acceptance_rate":100.0,"work_days":11,"daily":{"11/08":{"d":20,"r":0},"10/08":{"d":18,"r":0},"09/08":{"d":18,"r":0},"08/08":{"d":20,"r":0},"07/08":{"d":18,"r":0},"06/08":{"d":19,"r":0},"05/08":{"d":11,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1785527883257053","name":"ASKAR AHMED","iqama":"2381159983","city":"Dammam","delivered":118,"rejected":1,"total":119,"acceptance_rate":99.2,"work_days":11,"daily":{"11/08":{"d":21,"r":1},"10/08":{"d":22,"r":0},"09/08":{"d":7,"r":0},"08/08":{"d":15,"r":0},"07/08":{"d":13,"r":0},"06/08":{"d":23,"r":0},"05/08":{"d":17,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1786013012202612","name":"SHUKRI AHMED","iqama":"2300062540","city":"Dammam","delivered":106,"rejected":0,"total":106,"acceptance_rate":100.0,"work_days":6,"daily":{"11/08":{"d":22,"r":0},"10/08":{"d":21,"r":0},"09/08":{"d":19,"r":0},"08/08":{"d":18,"r":0},"07/08":{"d":26,"r":0},"06/08":{"d":0,"r":0}}},{"id":"1785532679202372","name":"EISSA","iqama":"—","city":"غير محدد","delivered":83,"rejected":1,"total":84,"acceptance_rate":98.8,"work_days":10,"daily":{"10/08":{"d":8,"r":0},"09/08":{"d":6,"r":0},"08/08":{"d":12,"r":0},"07/08":{"d":20,"r":0},"06/08":{"d":20,"r":0},"05/08":{"d":17,"r":1},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1786015078257322","name":"SAFWAN MOOZAB","iqama":"2343642720","city":"Dammam","delivered":82,"rejected":0,"total":82,"acceptance_rate":100.0,"work_days":6,"daily":{"11/08":{"d":15,"r":0},"10/08":{"d":16,"r":0},"09/08":{"d":15,"r":0},"08/08":{"d":15,"r":0},"07/08":{"d":21,"r":0},"06/08":{"d":0,"r":0}}},{"id":"1786009910206928","name":"Aminul Haque","iqama":"2579003449","city":"Riyadh","delivered":63,"rejected":0,"total":63,"acceptance_rate":100.0,"work_days":3,"daily":{"11/08":{"d":26,"r":0},"10/08":{"d":20,"r":0},"09/08":{"d":17,"r":0}}},{"id":"1785666475257821","name":"MOHAMMED ABDULLAH","iqama":"2461391548","city":"Dammam","delivered":57,"rejected":0,"total":57,"acceptance_rate":100.0,"work_days":8,"daily":{"11/08":{"d":9,"r":0},"10/08":{"d":2,"r":0},"09/08":{"d":2,"r":0},"08/08":{"d":4,"r":0},"07/08":{"d":6,"r":0},"06/08":{"d":19,"r":0},"05/08":{"d":15,"r":0},"04/08":{"d":0,"r":0}}},{"id":"1786010561206821","name":"Md Sajal","iqama":"2608004616","city":"Riyadh","delivered":50,"rejected":4,"total":54,"acceptance_rate":92.6,"work_days":6,"daily":{"11/08":{"d":24,"r":4},"10/08":{"d":17,"r":0},"09/08":{"d":9,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0}}},{"id":"1785671806480110","name":"MOUSA BAKR","iqama":"2490737166","city":"Dammam","delivered":50,"rejected":0,"total":50,"acceptance_rate":100.0,"work_days":9,"daily":{"11/08":{"d":16,"r":0},"10/08":{"d":5,"r":0},"09/08":{"d":4,"r":0},"08/08":{"d":12,"r":0},"07/08":{"d":8,"r":0},"06/08":{"d":5,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0}}},{"id":"1785582522222944","name":"Esmail Hamid","iqama":"2304666932","city":"Dammam","delivered":50,"rejected":0,"total":50,"acceptance_rate":100.0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":3,"r":0},"07/08":{"d":13,"r":0},"06/08":{"d":18,"r":0},"05/08":{"d":16,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1786019391480101","name":"AHMED ABDO","iqama":"2375686769","city":"Dammam","delivered":47,"rejected":0,"total":47,"acceptance_rate":100.0,"work_days":6,"daily":{"11/08":{"d":1,"r":0},"10/08":{"d":4,"r":0},"09/08":{"d":6,"r":0},"08/08":{"d":16,"r":0},"07/08":{"d":18,"r":0},"06/08":{"d":2,"r":0}}},{"id":"1785695358088013","name":"BASEM SULTAN","iqama":"2516994635","city":"Dammam","delivered":41,"rejected":0,"total":41,"acceptance_rate":100.0,"work_days":8,"daily":{"11/08":{"d":8,"r":0},"10/08":{"d":5,"r":0},"09/08":{"d":8,"r":0},"08/08":{"d":5,"r":0},"07/08":{"d":7,"r":0},"06/08":{"d":7,"r":0},"05/08":{"d":1,"r":0},"04/08":{"d":0,"r":0}}},{"id":"1785579787060174","name":"RUSHDI HASAN","iqama":"2371426145","city":"Dammam","delivered":35,"rejected":0,"total":35,"acceptance_rate":100.0,"work_days":10,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":9,"r":0},"09/08":{"d":15,"r":0},"08/08":{"d":4,"r":0},"07/08":{"d":4,"r":0},"06/08":{"d":3,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0}}},{"id":"1785533878206371","name":"MOHAMED MAHMOUD","iqama":"2512385663","city":"Dammam","delivered":34,"rejected":0,"total":34,"acceptance_rate":100.0,"work_days":11,"daily":{"11/08":{"d":3,"r":0},"10/08":{"d":1,"r":0},"09/08":{"d":2,"r":0},"08/08":{"d":3,"r":0},"07/08":{"d":1,"r":0},"06/08":{"d":15,"r":0},"05/08":{"d":9,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1785703117257342","name":"Mohammed Abdullah","iqama":"2448807228","city":"Dammam","delivered":33,"rejected":0,"total":33,"acceptance_rate":100.0,"work_days":7,"daily":{"11/08":{"d":1,"r":0},"10/08":{"d":7,"r":0},"09/08":{"d":7,"r":0},"08/08":{"d":7,"r":0},"07/08":{"d":5,"r":0},"06/08":{"d":6,"r":0},"05/08":{"d":0,"r":0}}},{"id":"1786017339206479","name":"ABDULLAH QUBALI","iqama":"2457812523","city":"Dammam","delivered":26,"rejected":0,"total":26,"acceptance_rate":100.0,"work_days":6,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":6,"r":0},"09/08":{"d":1,"r":0},"08/08":{"d":10,"r":0},"07/08":{"d":9,"r":0},"06/08":{"d":0,"r":0}}},{"id":"1785535203257909","name":"BASHER AHMED","iqama":"2349030862","city":"Dammam","delivered":22,"rejected":0,"total":22,"acceptance_rate":100.0,"work_days":8,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":4,"r":0},"08/08":{"d":5,"r":0},"07/08":{"d":4,"r":0},"06/08":{"d":3,"r":0},"05/08":{"d":6,"r":0},"04/08":{"d":0,"r":0}}},{"id":"1785674066202348","name":"ABDO AYEDH","iqama":"2535313528","city":"Dammam","delivered":20,"rejected":0,"total":20,"acceptance_rate":100.0,"work_days":9,"daily":{"11/08":{"d":4,"r":0},"10/08":{"d":6,"r":0},"09/08":{"d":5,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":5,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0}}},{"id":"1785877748480032","name":"ALI MOQBELI","iqama":"2506575287","city":"Dammam","delivered":19,"rejected":0,"total":19,"acceptance_rate":100.0,"work_days":6,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":3,"r":0},"09/08":{"d":5,"r":0},"08/08":{"d":11,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0}}},{"id":"1764588450206091","name":"Amir","iqama":"—","city":"غير محدد","delivered":17,"rejected":0,"total":17,"acceptance_rate":100.0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":17,"r":0}}},{"id":"1766495850060849","name":"Mohammad","iqama":"—","city":"غير محدد","delivered":16,"rejected":0,"total":16,"acceptance_rate":100.0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":16,"r":0}}},{"id":"1785689722088542","name":"Maisarh Mohamed","iqama":"2414443123","city":"Dammam","delivered":8,"rejected":1,"total":9,"acceptance_rate":88.9,"work_days":9,"daily":{"11/08":{"d":5,"r":1},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":3,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0}}},{"id":"1785769589206417","name":"Abduaziz Ahmed","iqama":"2378702324","city":"Dammam","delivered":7,"rejected":0,"total":7,"acceptance_rate":100.0,"work_days":8,"daily":{"11/08":{"d":1,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":4,"r":0},"08/08":{"d":2,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0}}},{"id":"1785577587202520","name":"KHALID MASAD","iqama":"2465004667","city":"Dammam","delivered":3,"rejected":0,"total":3,"acceptance_rate":100.0,"work_days":7,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":3,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0}}},{"id":"1779228517206176","name":"MD","iqama":"—","city":"غير محدد","delivered":2,"rejected":0,"total":2,"acceptance_rate":100.0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":2,"r":0}}},{"id":"1766494115480060","name":"SAJIT","iqama":"—","city":"غير محدد","delivered":1,"rejected":0,"total":1,"acceptance_rate":100.0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":1,"r":0}}},{"id":"1785705371257198","name":"NAJIB SAIF","iqama":"2446138808","city":"Dammam","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":8,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0}}},{"id":"1785680978206215","name":"Hamdi Mohamed","iqama":"2359343692","city":"Dammam","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":9,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0}}},{"id":"1779198871060675","name":"NASIM","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1779197891202199","name":"SHAKIB","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1779196058088524","name":"SK","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1773656160237553","name":"Md","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1766585720257572","name":"Faysal","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1765097848206673","name":"IKRAM","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764839600088222","name":"Md","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764595115480059","name":"Md","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1754295721206366","name":"Dhaifallah","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1744809825257598","name":"Sultan","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1744461215237149","name":"Abdulmohsen","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1741262259206114","name":"Mohammed","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1739051783202430","name":"Sabul","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":11,"daily":{"11/08":{"d":0,"r":0},"10/08":{"d":0,"r":0},"09/08":{"d":0,"r":0},"08/08":{"d":0,"r":0},"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1765711727257230","name":"ZAFAR","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":7,"daily":{"07/08":{"d":0,"r":0},"06/08":{"d":0,"r":0},"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1782642823060201","name":"AJEET","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1782631001019034","name":"ELHADI","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1781789823257916","name":"Shameer","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1773656723060421","name":"Samir","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1773042368202013","name":"MUHAMMAD","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1772352251202998","name":"Fessal","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1772265727060994","name":"MD","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1770665328237749","name":"SHAHIN","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764848391088001","name":"SAMEER","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764660264237440","name":"Md","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764626832088414","name":"Aminul","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764585565480645","name":"MD","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764581757480280","name":"Mohsin","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764509855480563","name":"Anamul","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764252238060117","name":"SHAH","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764234901206130","name":"RAM","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1764233009202779","name":"MANOJ","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1761485313237159","name":"MUHAMMAD","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1751526092480454","name":"Shahansha","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}},{"id":"1739626259237214","name":"Mantu","iqama":"—","city":"غير محدد","delivered":0,"rejected":0,"total":0,"acceptance_rate":0,"work_days":5,"daily":{"05/08":{"d":0,"r":0},"04/08":{"d":0,"r":0},"03/08":{"d":0,"r":0},"02/08":{"d":0,"r":0},"01/08":{"d":0,"r":0}}}]};
+var curCity = 'all';
+
+function n(v){return v.toLocaleString('en-US')}
+function ac(v){return v>=98?'n-hi':v>=90?'n-md':'n-lo'}
+function ah(v){return v>=98?'#10b981':v>=90?'#eab308':'#ef4444'}
+
+function fillKpis(){
+  var t = DATA.totals;
+  document.getElementById('last-day').textContent = t.last_day;
+  document.getElementById('kpi-riders').textContent = n(t.riders);
+  document.getElementById('kpi-cities').textContent = t.riyadh + ' الرياض · ' + t.dammam + ' الدمام';
+  document.getElementById('kpi-del').textContent = n(t.delivered);
+  document.getElementById('kpi-avg').textContent = 'متوسط ' + Math.round(t.delivered/t.days) + '/يوم';
+  document.getElementById('kpi-rej').textContent = n(t.rejected);
+  var tot = t.delivered + t.rejected;
+  var rejPct = tot>0 ? (t.rejected*100/tot).toFixed(1) : 0;
+  document.getElementById('kpi-rej-pct').textContent = rejPct + '% من الإجمالي';
+  var acc = tot>0 ? (t.delivered*100/tot).toFixed(1) : 0;
+  document.getElementById('kpi-acc').textContent = acc + '%';
+}
+
+function filterCity(c){
+  curCity = c;
+  document.querySelectorAll('.fb-btn').forEach(function(b){
+    b.classList.toggle('active', b.dataset.city === c);
+  });
+  render();
+}
+
+function render(){
+  var q = document.getElementById('search').value.trim().toLowerCase();
+  var sortBy = document.getElementById('sort').value;
+  var list = DATA.riders.filter(function(r){
+    if(curCity !== 'all' && r.city !== curCity) return false;
+    if(q && !(r.name.toLowerCase().includes(q) || r.id.includes(q))) return false;
+    return true;
+  });
+  var sorters = {
+    delivered: function(a,b){return b.delivered - a.delivered},
+    rejected:  function(a,b){return b.rejected - a.rejected},
+    acceptance:function(a,b){return b.acceptance_rate - a.acceptance_rate},
+    days:      function(a,b){return b.work_days - a.work_days},
+    name:      function(a,b){return a.name.localeCompare(b.name,'ar')},
+  };
+  list.sort(sorters[sortBy]);
+
+  var tb = document.getElementById('tbody');
+  var emp = document.getElementById('empty');
+  if(list.length === 0){
+    tb.innerHTML = '';
+    emp.style.display = 'block';
+    return;
+  }
+  emp.style.display = 'none';
+
+  var rows = list.map(function(r,i){
+    var rank = i+1;
+    var rankCls = rank<=3 ? ' rank-'+rank : '';
+    var avg = r.work_days>0 ? Math.round(r.delivered/r.work_days) : 0;
+    return '<tr>' +
+      '<td class="rank'+rankCls+'">'+rank+'</td>' +
+      '<td><div class="name">'+r.name+'</div><div class="id">'+r.iqama+'</div></td>' +
+      '<td><span class="city-p city-'+r.city.split(' ')[0]+'">'+r.city+'</span></td>' +
+      '<td style="text-align:center" class="num n-hi">'+n(r.delivered)+'</td>' +
+      '<td style="text-align:center" class="num '+(r.rejected>0?'n-lo':'')+'">'+n(r.rejected)+'</td>' +
+      '<td style="text-align:center"><div class="acc-bar"><span class="num '+ac(r.acceptance_rate)+'">'+r.acceptance_rate+'%</span>' +
+        '<span class="acc-bar-bg"><span class="acc-bar-fill" style="width:'+r.acceptance_rate+'%;background:'+ah(r.acceptance_rate)+'"></span></span>' +
+      '</div></td>' +
+      '<td style="text-align:center" class="num">'+r.work_days+'</td>' +
+      '<td style="text-align:center" class="num">'+avg+'</td>' +
+    '</tr>';
+  }).join('');
+  tb.innerHTML = rows;
+}
+
+fillKpis();
+render();
+</script>
+</body>
+</html>
