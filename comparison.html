@@ -182,6 +182,7 @@ const KEETA_DATA = {"07-2026": {"drivers": [{"id": "1779228517206176", "iqama": 
   {id:'05-2026', label:'مايو 2026'},
   {id:'06-2026', label:'يونيو 2026'},
   {id:'07-2026', label:'يوليو 2026'},
+  {id:'08-2026', label:'أغسطس 2026'},
 ];
 
 const cityMap = {Riyadh:'الرياض',Medina:'المدينة',Mecca:'مكة','Eastern province':'المنطقة الشرقية',
@@ -398,7 +399,7 @@ function renderDualReport(keetaName, hungerName) {
   const rows = [];
 
   // For each selected month, check both apps
-  const MONTH_LABELS = {'05-2026':'مايو 2026','06-2026':'يونيو 2026','07-2026':'يوليو 2026'};
+  const MONTH_LABELS = {'05-2026':'مايو 2026','06-2026':'يونيو 2026','07-2026':'يوليو 2026','08-2026':'أغسطس 2026'};
   [...selectedMonths].sort().forEach(monthId => {
     const label = MONTH_LABELS[monthId] || monthId;
     [['keeta', keetaName, '#eab308', 'كيتا'], ['hunger', hungerName, '#f97316', 'هنقر']].forEach(([app, name, color, appLabel]) => {
