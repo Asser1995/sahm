@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>إدارة المستخدمين</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070809;--card:#101319;--brd:#1e2530;--txt:#e2e8f0;--txt2:#94a3b8;--txt3:#5b6675;
+--acc:#22d3ee;--grn:#10b981;--red:#ef4444;--ylw:#eab308;--pur:#a855f7}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding:22px}
+.wrap{max-width:1080px;margin:0 auto}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+.h-t{font-size:26px;font-weight:900}
+.h-t em{font-style:normal;color:var(--acc)}
+.h-s{font-size:12px;color:var(--txt3);margin-top:3px}
+.btn{background:#1e2530;border:1px solid #2a3344;border-radius:10px;padding:9px 16px;color:var(--txt);
+ font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--acc);color:var(--acc)}
+.btn.p{background:linear-gradient(135deg,#06b6d4,#0891b2);border:0;color:#062028}
+.btn.g{background:linear-gradient(135deg,#10b981,#059669);border:0;color:#052e22}
+.btn.r{background:transparent;border-color:#7f1d1d;color:#f87171}
+.btn.r:hover{background:#7f1d1d22;border-color:var(--red);color:var(--red)}
+.btn.sm{padding:5px 11px;font-size:12px;border-radius:8px}
+.card{background:var(--card);border:1px solid var(--brd);border-radius:16px;padding:20px 22px;margin-bottom:18px}
+.card-t{font-size:15px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-t::before{content:'';width:3px;height:16px;background:var(--acc);border-radius:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
+label{display:block;font-size:11px;color:var(--txt3);margin-bottom:5px;font-weight:600}
+input,select{width:100%;background:#070809;border:1px solid var(--brd);border-radius:9px;padding:10px 13px;
+ color:var(--txt);font-family:'Cairo',sans-serif;font-size:13px;outline:none;transition:.2s}
+input:focus,select:focus{border-color:var(--acc)}
+table{width:100%;border-collapse:collapse}
+th{text-align:right;padding:9px 12px;font-size:11px;color:var(--txt3);font-weight:700;border-bottom:2px solid var(--brd);white-space:nowrap}
+td{padding:11px 12px;font-size:13px;border-bottom:1px solid #161c26;vertical-align:middle}
+tr:hover td{background:#0d1117}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.tag.admin{background:#a855f722;color:#c084fc;border:1px solid #a855f755}
+.tag.user{background:#94a3b822;color:var(--txt2);border:1px solid #94a3b833}
+.tag.on{background:#10b98122;color:#34d399;border:1px solid #10b98155}
+.tag.off{background:#ef444422;color:#f87171;border:1px solid #ef444455}
+.acts{display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap}
+.msg{padding:11px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-bottom:14px;display:none}
+.msg.ok{background:#10b98118;border:1px solid #10b98155;color:#34d399;display:block}
+.msg.err{background:#ef444418;border:1px solid #ef444455;color:#f87171;display:block}
+.msg.inf{background:#22d3ee14;border:1px solid #22d3ee44;color:#67e8f9;display:block}
+.hint{font-size:11.5px;color:var(--txt3);line-height:1.9;margin-top:10px}
+.hint code{background:#070809;border:1px solid var(--brd);border-radius:5px;padding:1px 6px;color:var(--acc);font-size:11px}
+.empty{text-align:center;color:var(--txt3);padding:34px;font-size:13px}
+.modal{display:none;position:fixed;inset:0;background:rgba(7,8,9,.88);z-index:99;align-items:center;justify-content:center;padding:20px}
+.modal.on{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--brd);border-radius:16px;padding:24px;max-width:420px;width:100%}
+.pw-box{background:#070809;border:1px dashed var(--acc);border-radius:10px;padding:14px;text-align:center;margin:14px 0}
+.pw-box b{font-size:19px;color:var(--acc);letter-spacing:1px;font-family:monospace}
+@media(max-width:620px){td,th{padding:8px 6px;font-size:12px}.h-t{font-size:21px}}
+</style>
+</head>
+<body>
+<script>
+/* ═══ نظام المستخدمين — يقرأ من شيت جوجل عبر Apps Script ═══
+   ضع رابط النشر (ينتهي بـ /exec) في المتغيّر التالي: */
+var AUTH_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyKMkV-nIpTVGu2U_Q67MFodprAxyHmdfwFkBdfoeNdV9OVlrscsTQG0kcucNn8AmAV/exec';
+/* ═════════════════════════════════════════════════════════ */
+function _sha256(ascii){
+  function rr(v,a){return (v>>>a)|(v<<(32-a));}
+  var mx=Math.pow,mf=Math.floor,h=[],k=[],primes=[],i=2,j,res='';
+  function isP(n){for(var d=2;d*d<=n;d++)if(n%d===0)return false;return true;}
+  for(;primes.length<64;i++){ if(isP(i)) primes.push(i); }
+  for(i=0;i<64;i++){ k[i]=mf(mx(primes[i],1/3)*mx(2,32))|0; if(i<8) h[i]=mf(mx(primes[i],1/2)*mx(2,32))|0; }
+  // utf8 encode
+  var utf8=unescape(encodeURIComponent(ascii));
+  var words=[],l=utf8.length*8;
+  for(i=0;i<utf8.length;i++) words[i>>2]|=(utf8.charCodeAt(i)&0xFF)<<((3-(i%4))*8);
+  words[l>>5]|=0x80<<(24-l%32);
+  words[((l+64>>9)<<4)+15]=l;
+  var w=[],a,b,c,d,e,f,g,hh,t1,t2;
+  for(i=0;i<words.length;i+=16){
+    a=h[0];b=h[1];c=h[2];d=h[3];e=h[4];f=h[5];g=h[6];hh=h[7];
+    for(j=0;j<64;j++){
+      w[j] = j<16 ? (words[i+j]|0) :
+        (rr(w[j-15],7)^rr(w[j-15],18)^(w[j-15]>>>3)) + (w[j-16]|0) +
+        (rr(w[j-2],17)^rr(w[j-2],19)^(w[j-2]>>>10)) + (w[j-7]|0);
+      w[j]=w[j]|0;
+      t1 = (hh + (rr(e,6)^rr(e,11)^rr(e,25)) + ((e&f)^((~e)&g)) + k[j] + w[j])|0;
+      t2 = ((rr(a,2)^rr(a,13)^rr(a,22)) + ((a&b)^(a&c)^(b&c)))|0;
+      hh=g; g=f; f=e; e=(d+t1)|0; d=c; c=b; b=a; a=(t1+t2)|0;
+    }
+    h[0]=(h[0]+a)|0;h[1]=(h[1]+b)|0;h[2]=(h[2]+c)|0;h[3]=(h[3]+d)|0;
+    h[4]=(h[4]+e)|0;h[5]=(h[5]+f)|0;h[6]=(h[6]+g)|0;h[7]=(h[7]+hh)|0;
+  }
+  for(i=0;i<8;i++) res += ('00000000'+(h[i]>>>0).toString(16)).slice(-8);
+  return res;
+}
+function authHash(u,p){ return _sha256(String(u).trim().toLowerCase()+'|'+String(p)); }
+var __jp=0;
+function authCall(params, ok, fail){
+  if(!AUTH_ENDPOINT){ fail && fail('no-endpoint'); return; }
+  var cb='__authcb'+(++__jp), done=false;
+  var qs=[]; for(var k in params) qs.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
+  qs.push('cb='+cb);
+  var s=document.createElement('script');
+  s.src=AUTH_ENDPOINT+(AUTH_ENDPOINT.indexOf('?')>-1?'&':'?')+qs.join('&');
+  window[cb]=function(res){ done=true; cleanup(); ok&&ok(res); };
+  s.onerror=function(){ if(!done){ cleanup(); fail&&fail('network'); } };
+  function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(t); }
+  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 15000);
+  document.head.appendChild(s);
+}
+</script>
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <div class="h-t">إدارة <em>المستخدمين</em></div>
+      <div class="h-s">إضافة وحذف وتغيير كلمات المرور — تُحفظ في شيت جوجل وتطبّق على الجميع</div>
+    </div>
+    <div style="display:flex;gap:9px">
+      <button class="btn" onclick="load()">⟳ تحديث</button>
+      <a class="btn" id="sheet-link" href="#" target="_blank">📋 الشيت</a>
+      <a class="btn" href="index.html">🏠 الرئيسية</a>
+    </div>
+  </div>
+
+  <div id="msg" class="msg"></div>
+
+  <div class="card">
+    <div class="card-t">إضافة مستخدم</div>
+    <div class="grid">
+      <div><label>اسم المستخدم</label><input id="n-name" placeholder="مثال: Khaled"></div>
+      <div><label>كلمة المرور</label><input id="n-pass" placeholder="8 خانات أو أكثر"></div>
+      <div><label>الصلاحية</label><select id="n-role"><option value="user">مستخدم</option><option value="admin">مدير</option></select></div>
+      <div><label>ملاحظة (اختياري)</label><input id="n-note" placeholder="القسم / الجوال"></div>
+      <div><button class="btn g" style="width:100%" onclick="addUser()">＋ إضافة</button></div>
+    </div>
+    <div class="hint">كلمة المرور تُخزَّن <b>مشفّرة</b> في الشيت (لا تظهر كنص). إذا تبيها مكتوبة عادي، اكتبها مباشرة في عمود <code>password</code> داخل الشيت.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-t">المستخدمون <span id="cnt" style="color:var(--txt3);font-weight:600;font-size:12px"></span></div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr>
+        <th>#</th><th>المستخدم</th><th>الصلاحية</th><th>الحالة</th><th>كلمة المرور</th>
+        <th>ملاحظة</th><th>آخر تعديل</th><th>إجراءات</th>
+      </tr></thead>
+      <tbody id="tb"><tr><td colspan="8" class="empty">جاري التحميل…</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
+<div class="modal" id="pw-modal">
+  <div class="modal-box">
+    <div class="card-t" id="pw-title">تغيير كلمة المرور</div>
+    <label>كلمة المرور الجديدة</label>
+    <input id="pw-input" placeholder="اكتبها أو ولّدها">
+    <div style="display:flex;gap:9px;margin-top:12px">
+      <button class="btn" onclick="genPw()">🎲 توليد</button>
+      <button class="btn p" style="flex:1" onclick="savePw()">حفظ</button>
+      <button class="btn" onclick="closePw()">إلغاء</button>
+    </div>
+    <div class="hint">انسخ كلمة المرور وأرسلها للمستخدم — ما راح تقدر تشوفها بعدين لأنها تُخزَّن مشفّرة.</div>
+  </div>
+</div>
+
+<script>
+var SHEET_URL='https://docs.google.com/spreadsheets/d/1ggds55EAI47UTP8i1IL9CSztHQmTqn8rztDAf3yVzCw/edit';
+document.getElementById('sheet-link').href=SHEET_URL;
+var ME=localStorage.getItem('dash_user')||'', AH=localStorage.getItem('dash_ah')||'';
+var ROLE=(localStorage.getItem('dash_role')||'').toLowerCase();
+var USERS=[], pwTarget=null;
+
+function guard(){
+  var d=localStorage.getItem('auth_date');
+  if(d!==new Date().toDateString()){ location.replace('index.html'); return false; }
+  if(ROLE!=='admin'){ document.body.innerHTML='<div style="max-width:520px;margin:80px auto;text-align:center;font-family:Cairo,sans-serif;color:#e2e8f0"><div style="font-size:44px">🔒</div><h2 style="margin:14px 0 8px">هذه الصفحة للمديرين فقط</h2><p style="color:#5b6675;font-size:13px;margin-bottom:20px">سجّل الدخول بحساب صلاحيته مدير</p><a href="index.html" style="background:#1e2530;border:1px solid #2a3344;border-radius:10px;padding:10px 20px;color:#22d3ee;text-decoration:none;font-family:Cairo">الرئيسية</a></div>'; return false; }
+  return true;
+}
+function msg(t,cls){ var m=document.getElementById('msg'); m.className='msg '+cls; m.textContent=t;
+  if(cls==='ok'){ setTimeout(function(){ m.className='msg'; },4000); } }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+function load(){
+  authCall({fn:'list',au:ME,ah:AH}, function(res){
+    if(!res||!res.ok){ msg('تعذّر جلب القائمة: '+((res&&res.error)||'غير معروف'),'err'); return; }
+    USERS=res.users||[]; render(); msg('تم تحميل '+USERS.length+' مستخدم','ok');
+  }, function(e){ msg(e==='no-endpoint' ? 'لم يُضبط رابط Apps Script بعد — راجع دليل الإعداد' : 'تعذّر الاتصال بالشيت ('+e+')','err'); });
+}
+
+function render(){
+  var tb=document.getElementById('tb');
+  document.getElementById('cnt').textContent='('+USERS.length+')';
+  if(!USERS.length){ tb.innerHTML='<tr><td colspan="8" class="empty">لا يوجد مستخدمون</td></tr>'; return; }
+  tb.innerHTML=USERS.map(function(u,i){
+    var pw = u.has_pass ? (u.plain?'<span style="color:var(--ylw)">نص في الشيت</span>':'<span style="color:var(--txt3)">مشفّرة</span>')
+                        : '<span style="color:var(--red)">غير مضبوطة</span>';
+    return '<tr>'+
+      '<td style="color:var(--txt3)">'+(i+1)+'</td>'+
+      '<td style="font-weight:700">'+esc(u.username)+(u.username===ME?' <span style="color:var(--txt3);font-size:11px">(أنت)</span>':'')+'</td>'+
+      '<td><span class="tag '+(u.role==='admin'?'admin':'user')+'">'+(u.role==='admin'?'مدير':'مستخدم')+'</span></td>'+
+      '<td><span class="tag '+(u.active?'on':'off')+'">'+(u.active?'مفعّل':'موقوف')+'</span></td>'+
+      '<td style="font-size:12px">'+pw+'</td>'+
+      '<td style="color:var(--txt2);font-size:12px">'+esc(u.note)+'</td>'+
+      '<td style="color:var(--txt3);font-size:11px">'+esc(u.updated_at)+(u.updated_by?'<br>'+esc(u.updated_by):'')+'</td>'+
+      '<td><div class="acts">'+
+        '<button class="btn sm" onclick="openPw(\''+esc(u.username)+'\')">🔑 كلمة المرور</button>'+
+        '<button class="btn sm" onclick="toggleActive(\''+esc(u.username)+'\','+(u.active?'false':'true')+')">'+(u.active?'⏸ إيقاف':'▶ تفعيل')+'</button>'+
+        '<button class="btn sm" onclick="toggleRole(\''+esc(u.username)+'\',\''+(u.role==='admin'?'user':'admin')+'\')">'+(u.role==='admin'?'↓ مستخدم':'↑ مدير')+'</button>'+
+        (u.username===ME?'':'<button class="btn sm r" onclick="delUser(\''+esc(u.username)+'\')">🗑 حذف</button>')+
+      '</div></td></tr>';
+  }).join('');
+}
+
+function save(params, okMsg){
+  params.fn='save'; params.au=ME; params.ah=AH;
+  authCall(params, function(res){
+    if(res&&res.ok){ msg(okMsg,'ok'); load(); }
+    else msg('فشل: '+((res&&res.error)||'غير معروف'),'err');
+  }, function(e){ msg('تعذّر الاتصال ('+e+')','err'); });
+}
+function addUser(){
+  var n=document.getElementById('n-name').value.trim();
+  var p=document.getElementById('n-pass').value;
+  if(!n){ msg('اكتب اسم المستخدم','err'); return; }
+  if(p.length<4){ msg('كلمة المرور قصيرة','err'); return; }
+  if(USERS.some(function(u){return u.username.toLowerCase()===n.toLowerCase();})){ msg('الاسم موجود مسبقاً','err'); return; }
+  save({name:n, ph:authHash(n,p), role:document.getElementById('n-role').value,
+        active:'true', note:document.getElementById('n-note').value.trim()}, 'تمت إضافة '+n);
+  document.getElementById('n-name').value=''; document.getElementById('n-pass').value=''; document.getElementById('n-note').value='';
+}
+function toggleActive(n,v){ save({name:n, active:v}, (v==='true'?'تم تفعيل ':'تم إيقاف ')+n); }
+function toggleRole(n,r){ save({name:n, role:r}, 'صلاحية '+n+' صارت '+(r==='admin'?'مدير':'مستخدم')); }
+function delUser(n){
+  if(!confirm('حذف المستخدم '+n+' نهائياً؟')) return;
+  authCall({fn:'del',name:n,au:ME,ah:AH}, function(res){
+    if(res&&res.ok){ msg('تم حذف '+n,'ok'); load(); } else msg('فشل الحذف: '+((res&&res.error)||''),'err');
+  }, function(e){ msg('تعذّر الاتصال ('+e+')','err'); });
+}
+function openPw(n){ pwTarget=n; document.getElementById('pw-title').textContent='كلمة مرور جديدة لـ '+n;
+  document.getElementById('pw-input').value=''; document.getElementById('pw-modal').classList.add('on');
+  document.getElementById('pw-input').focus(); }
+function closePw(){ document.getElementById('pw-modal').classList.remove('on'); pwTarget=null; }
+function genPw(){ var c='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789@#$', s='';
+  for(var i=0;i<10;i++) s+=c[Math.floor(Math.random()*c.length)];
+  document.getElementById('pw-input').value=s; }
+function savePw(){
+  var p=document.getElementById('pw-input').value;
+  if(p.length<4){ msg('كلمة المرور قصيرة','err'); return; }
+  var n=pwTarget, isMe=(n===ME);
+  save({name:n, ph:authHash(n,p)}, 'تم تغيير كلمة مرور '+n+'  ←  '+p);
+  if(isMe) localStorage.setItem('dash_ah', authHash(n,p));
+  closePw();
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closePw(); });
+if(guard()) load();
+</script>
+</body>
+</html>
