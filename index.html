@@ -128,29 +128,111 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   </div>
 </div>
 <script>
+/* ═══ نظام المستخدمين — يقرأ من شيت جوجل عبر Apps Script ═══
+   ضع رابط النشر (ينتهي بـ /exec) في المتغيّر التالي: */
+var AUTH_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyKMkV-nIpTVGu2U_Q67MFodprAxyHmdfwFkBdfoeNdV9OVlrscsTQG0kcucNn8AmAV/exec';
+/* ═════════════════════════════════════════════════════════ */
+function _sha256(ascii){
+  function rr(v,a){return (v>>>a)|(v<<(32-a));}
+  var mx=Math.pow,mf=Math.floor,h=[],k=[],primes=[],i=2,j,res='';
+  function isP(n){for(var d=2;d*d<=n;d++)if(n%d===0)return false;return true;}
+  for(;primes.length<64;i++){ if(isP(i)) primes.push(i); }
+  for(i=0;i<64;i++){ k[i]=mf(mx(primes[i],1/3)*mx(2,32))|0; if(i<8) h[i]=mf(mx(primes[i],1/2)*mx(2,32))|0; }
+  // utf8 encode
+  var utf8=unescape(encodeURIComponent(ascii));
+  var words=[],l=utf8.length*8;
+  for(i=0;i<utf8.length;i++) words[i>>2]|=(utf8.charCodeAt(i)&0xFF)<<((3-(i%4))*8);
+  words[l>>5]|=0x80<<(24-l%32);
+  words[((l+64>>9)<<4)+15]=l;
+  var w=[],a,b,c,d,e,f,g,hh,t1,t2;
+  for(i=0;i<words.length;i+=16){
+    a=h[0];b=h[1];c=h[2];d=h[3];e=h[4];f=h[5];g=h[6];hh=h[7];
+    for(j=0;j<64;j++){
+      w[j] = j<16 ? (words[i+j]|0) :
+        (rr(w[j-15],7)^rr(w[j-15],18)^(w[j-15]>>>3)) + (w[j-16]|0) +
+        (rr(w[j-2],17)^rr(w[j-2],19)^(w[j-2]>>>10)) + (w[j-7]|0);
+      w[j]=w[j]|0;
+      t1 = (hh + (rr(e,6)^rr(e,11)^rr(e,25)) + ((e&f)^((~e)&g)) + k[j] + w[j])|0;
+      t2 = ((rr(a,2)^rr(a,13)^rr(a,22)) + ((a&b)^(a&c)^(b&c)))|0;
+      hh=g; g=f; f=e; e=(d+t1)|0; d=c; c=b; b=a; a=(t1+t2)|0;
+    }
+    h[0]=(h[0]+a)|0;h[1]=(h[1]+b)|0;h[2]=(h[2]+c)|0;h[3]=(h[3]+d)|0;
+    h[4]=(h[4]+e)|0;h[5]=(h[5]+f)|0;h[6]=(h[6]+g)|0;h[7]=(h[7]+hh)|0;
+  }
+  for(i=0;i<8;i++) res += ('00000000'+(h[i]>>>0).toString(16)).slice(-8);
+  return res;
+}
+function authHash(u,p){ return _sha256(String(u).trim().toLowerCase()+'|'+String(p)); }
+var __jp=0;
+function authCall(params, ok, fail){
+  if(!AUTH_ENDPOINT){ fail && fail('no-endpoint'); return; }
+  var cb='__authcb'+(++__jp), done=false;
+  var qs=[]; for(var k in params) qs.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
+  qs.push('cb='+cb);
+  var s=document.createElement('script');
+  s.src=AUTH_ENDPOINT+(AUTH_ENDPOINT.indexOf('?')>-1?'&':'?')+qs.join('&');
+  window[cb]=function(res){ done=true; cleanup(); ok&&ok(res); };
+  s.onerror=function(){ if(!done){ cleanup(); fail&&fail('network'); } };
+  function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(t); }
+  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 15000);
+  document.head.appendChild(s);
+}
+</script>
+<script>
+var LEGACY=['Mahdi','Rania','Mustafa','Mariam','Opu','Assma','Bissam','Nada'];
 (function(){
   var d=localStorage.getItem('auth_date');
   if(d===new Date().toDateString()){
     if(!localStorage.getItem('dash_user')) localStorage.setItem('dash_user','Sahm');
     document.getElementById('login-overlay').style.display='none';
-    document.addEventListener('DOMContentLoaded', function(){showAnalyticsBtn();});
+    document.addEventListener('DOMContentLoaded', function(){ showAnalyticsBtn(); showAdminBtn(); });
   }
 })();
+/* تعبئة قائمة الأسماء من الشيت */
+document.addEventListener('DOMContentLoaded', function(){
+  authCall({fn:'names'}, function(res){
+    if(!res||!res.ok||!res.names||!res.names.length) return;
+    var sel=document.getElementById('inp-user');
+    var cur=sel.value;
+    sel.innerHTML='<option value="" disabled selected style="color:#5b6675">اختر اسمك</option>'+
+      res.names.map(function(n){ return '<option>'+n.replace(/</g,'&lt;')+'</option>'; }).join('');
+    if(cur) sel.value=cur;
+  }, function(){});
+});
+function grant(user, role, hash){
+  localStorage.setItem('auth_date', new Date().toDateString());
+  localStorage.setItem('dash_user', user);
+  localStorage.setItem('dash_role', role||'user');
+  if((role||'')==='admin' && hash) localStorage.setItem('dash_ah', hash); else localStorage.removeItem('dash_ah');
+  document.getElementById('login-overlay').style.display='none';
+  showAnalyticsBtn(); showAdminBtn();
+}
+function loginErr(t){
+  document.getElementById('login-err').textContent=t;
+  var p=document.getElementById('inp-pass'); p.value=''; p.focus();
+}
+function legacyLogin(u,p,offline){
+  var ok=(LEGACY.indexOf(u)!==-1 && p==='Data777$')||(u==='Abo IYAD' && p==='Aboiyad7@')||(u==='Ceo' && p==='Aa121314');
+  if(ok){ grant(u, (u==='Abo IYAD'?'admin':'user'), authHash(u,p)); }
+  else loginErr(offline ? 'تعذّر الاتصال بقائمة المستخدمين — والبيانات المحلية غير مطابقة' : 'اسم المستخدم أو كلمة المرور غير صحيحة');
+}
 function doLogin(){
   var u=document.getElementById('inp-user').value.trim();
   var p=document.getElementById('inp-pass').value;
-  var valid=['Mahdi','Rania','Mustafa','Mariam','Opu','Assma','Bissam','Nada'];
-  var ok=(valid.indexOf(u)!==-1 && p==='Data777$')||(u==='Abo IYAD' && p==='Aboiyad7@')||(u==='Ceo' && p==='Aa121314');
-  if(ok){
-    localStorage.setItem('auth_date', new Date().toDateString());
-    localStorage.setItem('dash_user', u);
-    document.getElementById('login-overlay').style.display='none';
-    showAnalyticsBtn();
-  } else {
-    document.getElementById('login-err').textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
-    document.getElementById('inp-pass').value='';
-    document.getElementById('inp-pass').value='';document.getElementById('inp-pass').focus();
-  }
+  if(!u||!p){ loginErr('اختر اسمك واكتب كلمة المرور'); return; }
+  if(!AUTH_ENDPOINT){ legacyLogin(u,p); return; }
+  document.getElementById('login-err').textContent='… جاري التحقق';
+  var h=authHash(u,p);
+  authCall({fn:'login',u:u,h:h}, function(res){
+    if(res&&res.ok) grant(res.user, res.role, h);
+    else loginErr('اسم المستخدم أو كلمة المرور غير صحيحة');
+  }, function(){ legacyLogin(u,p,true); });
+}
+function showAdminBtn(){
+  var b=document.getElementById('usr-btn'); if(!b) return;
+  var r=(localStorage.getItem('dash_role')||'').toLowerCase();
+  var u=localStorage.getItem('dash_user')||'';
+  b.style.display=(r==='admin'||u==='Abo IYAD')?'block':'none';
 }
 document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 </script>
@@ -232,6 +314,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
     </a>
   </div>
   <div class="foot">📅 آخر تحديث: 13/09/2026 — البيانات من Google Drive</div>
+<a id="usr-btn" href="users_admin.html" title="إدارة المستخدمين" style="display:none;position:fixed;bottom:18px;left:62px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0;text-decoration:none" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">👥</a>
 <button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
 </div>
 
@@ -253,7 +336,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 </div>
 <script>
 var PAGE_CLR={'هنقر':'249,115,22','كيتا':'234,179,8','مسار ماب':'14,165,233','المشرفون':'16,185,129','مقارنة':'168,85,247','الموظفين':'34,211,238','أمريكانا':'227,179,65','الرئيسية':'148,163,184'};
-function showAnalyticsBtn(){var u=localStorage.getItem("dash_user");var btn=document.getElementById("anl-btn");if(btn)btn.style.display=(u==="Abo IYAD")?"block":"none";}
+function showAnalyticsBtn(){var u=localStorage.getItem("dash_user");var r=(localStorage.getItem("dash_role")||"").toLowerCase();var btn=document.getElementById("anl-btn");if(btn)btn.style.display=(u==="Abo IYAD"||r==="admin")?"block":"none";if(typeof showAdminBtn==="function")showAdminBtn();}
 function anl_open(){document.getElementById('anl-modal').style.display='block';anl_render();}
 function anl_close(){document.getElementById('anl-modal').style.display='none';}
 function anl_clear(){if(confirm('مسح كل سجل الزيارات؟')){localStorage.removeItem('dash_visits');anl_render();}}
