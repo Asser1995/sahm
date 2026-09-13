@@ -96,16 +96,34 @@ function authHash(u,p){ return _sha256(String(u).trim().toLowerCase()+'|'+String
 var __jp=0;
 function authCall(params, ok, fail){
   if(!AUTH_ENDPOINT){ fail && fail('no-endpoint'); return; }
-  var cb='__authcb'+(++__jp), done=false;
   var qs=[]; for(var k in params) qs.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
-  qs.push('cb='+cb);
-  var s=document.createElement('script');
-  s.src=AUTH_ENDPOINT+(AUTH_ENDPOINT.indexOf('?')>-1?'&':'?')+qs.join('&');
-  window[cb]=function(res){ done=true; cleanup(); ok&&ok(res); };
-  s.onerror=function(){ if(!done){ cleanup(); fail&&fail('network'); } };
-  function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(t); }
-  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 25000);
-  document.head.appendChild(s);
+  var url=AUTH_ENDPOINT+(AUTH_ENDPOINT.indexOf('?')>-1?'&':'?')+qs.join('&');
+  var settled=false;
+  function win(res){ if(settled) return; settled=true; ok && ok(res); }
+  function lose(e){ if(settled) return; settled=true; fail && fail(e); }
+
+  /* المحاولة 1: fetch عادي (يعمل على المواقع https) */
+  try{
+    var ctrl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+    var ft = setTimeout(function(){ try{ ctrl && ctrl.abort(); }catch(e){} }, 20000);
+    fetch(url, ctrl?{credentials:'omit',signal:ctrl.signal}:{credentials:'omit'})
+      .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.text(); })
+      .then(function(t){ clearTimeout(ft); var d=JSON.parse(t); win(d); })
+      .catch(function(){ clearTimeout(ft); jsonp(); });
+  }catch(e){ jsonp(); }
+
+  /* المحاولة 2: JSONP (يعمل من ملفات file:// وحين يمنع المتصفح fetch) */
+  function jsonp(){
+    if(settled) return;
+    var cb='__authcb'+(++__jp);
+    var s=document.createElement('script');
+    s.src=url+'&cb='+cb;
+    window[cb]=function(res){ cleanup(); win(res); };
+    s.onerror=function(){ cleanup(); lose('network'); };
+    function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(t); }
+    var t=setTimeout(function(){ cleanup(); lose('timeout'); }, 25000);
+    document.head.appendChild(s);
+  }
 }
 </script>
 <div class="wrap">
