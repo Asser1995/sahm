@@ -104,7 +104,7 @@ function authCall(params, ok, fail){
   window[cb]=function(res){ done=true; cleanup(); ok&&ok(res); };
   s.onerror=function(){ if(!done){ cleanup(); fail&&fail('network'); } };
   function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(t); }
-  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 15000);
+  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 25000);
   document.head.appendChild(s);
 }
 </script>
@@ -116,12 +116,17 @@ function authCall(params, ok, fail){
     </div>
     <div style="display:flex;gap:9px">
       <button class="btn" onclick="load()">⟳ تحديث</button>
+      <button class="btn" onclick="diag()">🔍 فحص الاتصال</button>
       <a class="btn" id="sheet-link" href="#" target="_blank">📋 الشيت</a>
       <a class="btn" href="index.html">🏠 الرئيسية</a>
     </div>
   </div>
 
   <div id="msg" class="msg"></div>
+  <div class="card" id="diag-card" style="display:none">
+    <div class="card-t">نتيجة الفحص</div>
+    <pre id="diag-out" style="font-family:monospace;font-size:12px;color:#94a3b8;white-space:pre-wrap;line-height:2;direction:ltr;text-align:left"></pre>
+  </div>
 
   <div class="card">
     <div class="card-t">إضافة مستخدم</div>
@@ -178,6 +183,29 @@ function msg(t,cls){ var m=document.getElementById('msg'); m.className='msg '+cl
   if(cls==='ok'){ setTimeout(function(){ m.className='msg'; },4000); } }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
 
+function probe(params,label,out,done){
+  var t0=Date.now();
+  authCall(params, function(res){
+    out.push('✔ '+label+'  ('+(Date.now()-t0)+'ms)  →  '+JSON.stringify(res).slice(0,180)); done();
+  }, function(e){
+    out.push('✘ '+label+'  ('+(Date.now()-t0)+'ms)  →  FAILED: '+e); done();
+  });
+}
+function diag(){
+  var card=document.getElementById('diag-card'), pre=document.getElementById('diag-out');
+  card.style.display='block';
+  var out=[];
+  out.push('page      : '+location.href);
+  out.push('endpoint  : '+(AUTH_ENDPOINT?AUTH_ENDPOINT.slice(0,58)+'…':'(فارغ)'));
+  out.push('user      : '+(ME||'(فارغ)')+'   role: '+(ROLE||'(فارغ)'));
+  out.push('hash      : '+(AH?AH.slice(0,10)+'… ('+AH.length+' خانة)':'(مفقود — سجّل خروج ودخول مرة ثانية)'));
+  out.push('—');
+  pre.textContent=out.join('\n')+'\n… جاري الفحص';
+  var n=0; function done(){ if(++n===3){ pre.textContent=out.join('\n'); } else pre.textContent=out.join('\n')+'\n… جاري الفحص'; }
+  probe({fn:'ping'},'ping  (بدون بيانات دخول)',out,done);
+  probe({fn:'names'},'names (قائمة الأسماء)',out,done);
+  probe({fn:'list',au:ME,ah:AH},'list  (يتطلب صلاحية مدير)',out,done);
+}
 function load(){
   authCall({fn:'list',au:ME,ah:AH}, function(res){
     if(!res||!res.ok){ msg('تعذّر جلب القائمة: '+((res&&res.error)||'غير معروف'),'err'); return; }

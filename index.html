@@ -110,17 +110,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <h2>مركز المتابعة</h2>
     <p>DELIVERY OPERATIONS — RESTRICTED</p>
     <select id="inp-user" style="width:100%;background:#070809;border:1px solid #1e2530;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s;-webkit-appearance:none;appearance:none">
-  <option value="" disabled selected style="color:#5b6675">اختر اسمك</option>
-  <option>Mahdi</option>
-  <option>Rania</option>
-  <option>Mustafa</option>
-  <option>Mariam</option>
-  <option>Opu</option>
-  <option>Assma</option>
-  <option>Bissam</option>
-  <option>Abo IYAD</option>
-  <option>Ceo</option>
-  <option>Nada</option>
+  <option value="" disabled selected style="color:#5b6675">… جاري تحميل الأسماء</option>
 </select>
     <input type="password" id="inp-pass" placeholder="كلمة المرور" autocomplete="current-password" />
     <button onclick="doLogin()">دخول</button>
@@ -174,18 +164,17 @@ function authCall(params, ok, fail){
   window[cb]=function(res){ done=true; cleanup(); ok&&ok(res); };
   s.onerror=function(){ if(!done){ cleanup(); fail&&fail('network'); } };
   function cleanup(){ try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode)s.parentNode.removeChild(s); clearTimeout(t); }
-  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 15000);
+  var t=setTimeout(function(){ if(!done){ cleanup(); fail&&fail('timeout'); } }, 25000);
   document.head.appendChild(s);
 }
 </script>
 <script>
-var LEGACY=['Mahdi','Rania','Mustafa','Mariam','Opu','Assma','Bissam','Nada'];
 (function(){
   var d=localStorage.getItem('auth_date');
   if(d===new Date().toDateString()){
     if(!localStorage.getItem('dash_user')) localStorage.setItem('dash_user','Sahm');
     document.getElementById('login-overlay').style.display='none';
-    document.addEventListener('DOMContentLoaded', function(){ showAnalyticsBtn(); showAdminBtn(); });
+    document.addEventListener('DOMContentLoaded', function(){ showAnalyticsBtn(); showAdminBtn(); showWhoChip(); });
   }
 })();
 /* تعبئة قائمة الأسماء من الشيت */
@@ -197,7 +186,11 @@ document.addEventListener('DOMContentLoaded', function(){
     sel.innerHTML='<option value="" disabled selected style="color:#5b6675">اختر اسمك</option>'+
       res.names.map(function(n){ return '<option>'+n.replace(/</g,'&lt;')+'</option>'; }).join('');
     if(cur) sel.value=cur;
-  }, function(){});
+  }, function(){
+    var sel=document.getElementById('inp-user');
+    if(sel && sel.options.length<=1)
+      sel.innerHTML='<option value="" disabled selected style="color:#f87171">تعذّر تحميل الأسماء — حدّث الصفحة</option>';
+  });
 });
 function grant(user, role, hash){
   localStorage.setItem('auth_date', new Date().toDateString());
@@ -205,28 +198,33 @@ function grant(user, role, hash){
   localStorage.setItem('dash_role', role||'user');
   if((role||'')==='admin' && hash) localStorage.setItem('dash_ah', hash); else localStorage.removeItem('dash_ah');
   document.getElementById('login-overlay').style.display='none';
-  showAnalyticsBtn(); showAdminBtn();
+  showAnalyticsBtn(); showAdminBtn(); showWhoChip();
 }
 function loginErr(t){
   document.getElementById('login-err').textContent=t;
   var p=document.getElementById('inp-pass'); p.value=''; p.focus();
 }
-function legacyLogin(u,p,offline){
-  var ok=(LEGACY.indexOf(u)!==-1 && p==='Data777$')||(u==='Abo IYAD' && p==='Aboiyad7@')||(u==='Ceo' && p==='Aa121314');
-  if(ok){ grant(u, (u==='Abo IYAD'?'admin':'user'), authHash(u,p)); }
-  else loginErr(offline ? 'تعذّر الاتصال بقائمة المستخدمين — والبيانات المحلية غير مطابقة' : 'اسم المستخدم أو كلمة المرور غير صحيحة');
-}
 function doLogin(){
   var u=document.getElementById('inp-user').value.trim();
   var p=document.getElementById('inp-pass').value;
   if(!u||!p){ loginErr('اختر اسمك واكتب كلمة المرور'); return; }
-  if(!AUTH_ENDPOINT){ legacyLogin(u,p); return; }
+  if(!AUTH_ENDPOINT){ loginErr('نظام المستخدمين غير مضبوط — راجع ملف USERS_SETUP.md'); return; }
   document.getElementById('login-err').textContent='… جاري التحقق';
   var h=authHash(u,p);
   authCall({fn:'login',u:u,h:h}, function(res){
     if(res&&res.ok) grant(res.user, res.role, h);
     else loginErr('اسم المستخدم أو كلمة المرور غير صحيحة');
-  }, function(){ legacyLogin(u,p,true); });
+  }, function(e){ loginErr(e==='timeout' ? 'الاتصال بطيء — حاول مرة ثانية' : 'تعذّر الوصول لقائمة المستخدمين — تأكد من الإنترنت'); });
+}
+function doLogout(){
+  localStorage.removeItem('auth_date'); localStorage.removeItem('dash_role'); localStorage.removeItem('dash_ah');
+  location.reload();
+}
+function showWhoChip(){
+  var c=document.getElementById('who-chip'); if(!c) return;
+  var logged=localStorage.getItem('auth_date')===new Date().toDateString();
+  c.style.display=logged?'flex':'none';
+  var n=document.getElementById('who-name'); if(n) n.textContent=localStorage.getItem('dash_user')||'';
 }
 function showAdminBtn(){
   var b=document.getElementById('usr-btn'); if(!b) return;
@@ -314,6 +312,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
     </a>
   </div>
   <div class="foot">📅 آخر تحديث: 13/09/2026 — البيانات من Google Drive</div>
+<div id="who-chip" style="display:none;position:fixed;bottom:18px;left:106px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:20px;height:36px;line-height:34px;padding:0 8px 0 14px;font-family:'Cairo',sans-serif;font-size:12px;color:#94a3b8;opacity:.55;transition:.25s;display:none;align-items:center;gap:8px" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.55'"><span id="who-name" style="font-weight:700;color:#e2e8f0"></span><button onclick="doLogout()" title="تسجيل الخروج" style="background:#1e2530;border:1px solid #2a3344;border-radius:14px;padding:3px 11px;color:#f87171;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer">خروج</button></div>
 <a id="usr-btn" href="users_admin.html" title="إدارة المستخدمين" style="display:none;position:fixed;bottom:18px;left:62px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0;text-decoration:none" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">👥</a>
 <button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
 </div>
@@ -336,7 +335,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 </div>
 <script>
 var PAGE_CLR={'هنقر':'249,115,22','كيتا':'234,179,8','مسار ماب':'14,165,233','المشرفون':'16,185,129','مقارنة':'168,85,247','الموظفين':'34,211,238','أمريكانا':'227,179,65','الرئيسية':'148,163,184'};
-function showAnalyticsBtn(){var u=localStorage.getItem("dash_user");var r=(localStorage.getItem("dash_role")||"").toLowerCase();var btn=document.getElementById("anl-btn");if(btn)btn.style.display=(u==="Abo IYAD"||r==="admin")?"block":"none";if(typeof showAdminBtn==="function")showAdminBtn();}
+function showAnalyticsBtn(){var u=localStorage.getItem("dash_user");var r=(localStorage.getItem("dash_role")||"").toLowerCase();var btn=document.getElementById("anl-btn");if(btn)btn.style.display=(u==="Abo IYAD"||r==="admin")?"block":"none";if(typeof showAdminBtn==="function")showAdminBtn();if(typeof showWhoChip==="function")showWhoChip();}
 function anl_open(){document.getElementById('anl-modal').style.display='block';anl_render();}
 function anl_close(){document.getElementById('anl-modal').style.display='none';}
 function anl_clear(){if(confirm('مسح كل سجل الزيارات؟')){localStorage.removeItem('dash_visits');anl_render();}}
