@@ -121,69 +121,70 @@ tr:hover td{background:rgba(234,179,8,.04)}
   <div class="hdr-in">
     <span style="font-size:24px">🟡</span>
     <div>
-      <div class="hdr-title">كيتا فري لانسر</div>
+      <div class="hdr-title" id="hdr-title">كيتا فري لانسر</div>
       <div class="hdr-sub" id="hdr-sub">سبتمبر 2026 · بالطلب (بدون راتب / صلاحية)</div>
     </div>
-    <span class="hdr-badge" id="hdr-day">يوم <span id="last-day">0</span></span>
+    <span class="hdr-badge" id="hdr-day"><span id="lbl-day">يوم</span> <span id="last-day">0</span></span>
     <div class="mon-bar"><button class="mon-btn" data-mon="08-2026" onclick="setMonth('08-2026')">أغسطس</button><button class="mon-btn active" data-mon="09-2026" onclick="setMonth('09-2026')">سبتمبر</button></div>
-    <a class="back" href="index.html">← الرئيسية</a>
+    <button class="back" id="lang-btn" onclick="toggleLang()" style="border:0;cursor:pointer;font-family:inherit">🌐 <span id="lang-label">EN</span></button>
+    <a class="back" href="index.html" id="lbl-back">← الرئيسية</a>
   </div>
 </div>
 
 <div class="wrap">
   <div class="kpis">
     <div class="kpi k-blue">
-      <div class="kpi-lbl">إجمالي السائقين</div>
+      <div class="kpi-lbl" data-i18n="k_riders">إجمالي السائقين</div>
       <div class="kpi-val" id="kpi-riders">0</div>
       <div class="kpi-sub" id="kpi-cities">— الرياض · — الدمام</div>
     </div>
     <div class="kpi k-green">
-      <div class="kpi-lbl">المهام المسلّمة</div>
+      <div class="kpi-lbl" data-i18n="k_del">المهام المسلّمة</div>
       <div class="kpi-val" id="kpi-del">0</div>
       <div class="kpi-sub" id="kpi-avg">متوسط —/يوم</div>
     </div>
     <div class="kpi k-red">
-      <div class="kpi-lbl">المهام المرفوضة</div>
+      <div class="kpi-lbl" data-i18n="k_rej">المهام المرفوضة</div>
       <div class="kpi-val" id="kpi-rej">0</div>
       <div class="kpi-sub" id="kpi-rej-pct">— من الإجمالي</div>
     </div>
     <div class="kpi k-cyan">
-      <div class="kpi-lbl">نسبة القبول</div>
+      <div class="kpi-lbl" data-i18n="k_acc">نسبة القبول</div>
       <div class="kpi-val" id="kpi-acc">—%</div>
-      <div class="kpi-sub">من إجمالي المهام</div>
+      <div class="kpi-sub" data-i18n="k_acc_sub">من إجمالي المهام</div>
     </div>
     <div class="kpi k-yellow">
-      <div class="kpi-lbl">إيجار النسبة الشهري</div>
+      <div class="kpi-lbl" data-i18n="k_rent">إيجار النسبة الشهري</div>
       <div class="kpi-val" id="kpi-rent">0</div>
       <div class="kpi-sub" id="kpi-plans">—</div>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-view="summary" onclick="setView('summary')">📊 الملخص</button>
-    <button class="tab" data-view="daily" onclick="setView('daily')">📅 الطلبات اليومية</button>
+    <button class="tab active" data-view="summary" onclick="setView('summary')" data-i18n="v_summary">📊 الملخص</button>
+    <button class="tab" data-view="daily" onclick="setView('daily')" data-i18n="v_daily">📅 الطلبات اليومية</button>
   </div>
 
   <!-- SUMMARY VIEW -->
   <div class="view active" id="view-summary">
     <div class="fbar">
-      <span class="fb-lbl">المدينة:</span>
-      <button class="fb-btn active" data-city="all" onclick="filterCity('all')">الكل</button>
-      <button class="fb-btn" data-city="Riyadh" onclick="filterCity('Riyadh')">الرياض</button>
-      <button class="fb-btn" data-city="Dammam" onclick="filterCity('Dammam')">الدمام</button>
-      <button class="fb-btn" data-city="free" onclick="filterCity('free')">🟡 فري لانسر</button>
-      <span class="fb-lbl" style="margin-inline-start:10px">النظام:</span>
-      <button class="fb-btn active" data-plan="all" onclick="filterPlan('all')">الكل</button>
-      <button class="fb-btn" data-plan="rent" onclick="filterPlan('rent')">نسبة (إيجار)</button>
-      <button class="fb-btn" data-plan="company" onclick="filterPlan('company')">نظام الشركة</button>
-      <button class="fb-btn" data-plan="none" onclick="filterPlan('none')">كفالة</button>
-      <input class="fb-search" id="search" type="text" placeholder="بحث بالاسم أو المعرف..." oninput="render()"/>
+      <span class="fb-lbl" data-i18n="f_city">المدينة:</span>
+      <button class="fb-btn active" data-city="all" onclick="filterCity('all')" data-i18n="f_all">الكل</button>
+      <button class="fb-btn" data-city="Riyadh" onclick="filterCity('Riyadh')" data-i18n="c_riyadh">الرياض</button>
+      <button class="fb-btn" data-city="Dammam" onclick="filterCity('Dammam')" data-i18n="c_dammam">الدمام</button>
+      <button class="fb-btn" data-city="free" onclick="filterCity('free')" data-i18n="c_free">🟡 فري لانسر</button>
+      <span class="fb-lbl" style="margin-inline-start:10px" data-i18n="f_plan">النظام:</span>
+      <button class="fb-btn active" data-plan="all" onclick="filterPlan('all')" data-i18n="f_all">الكل</button>
+      <button class="fb-btn" data-plan="rent" onclick="filterPlan('rent')" data-i18n="p_rent">نسبة (إيجار)</button>
+      <button class="fb-btn" data-plan="company" onclick="filterPlan('company')" data-i18n="p_company">نظام الشركة</button>
+      <button class="fb-btn" data-plan="none" onclick="filterPlan('none')" data-i18n="p_none">كفالة</button>
+      <input class="fb-search" id="search" type="text" placeholder="بحث بالاسم أو المعرف..." data-i18n-ph="ph_search" oninput="render()"/>
       <select class="fb-sort" id="sort" onchange="render()">
-        <option value="delivered">ترتيب: مسلّم ↓</option>
-        <option value="rejected">مرفوض ↓</option>
-        <option value="acceptance">قبول% ↓</option>
-        <option value="days">أيام العمل ↓</option>
-        <option value="name">الاسم أ-ي</option>
+        <option value="delivered" data-i18n="s_del">ترتيب: مسلّم ↓</option>
+        <option value="rejected" data-i18n="s_rej">مرفوض ↓</option>
+        <option value="acceptance" data-i18n="s_acc">قبول% ↓</option>
+        <option value="days" data-i18n="s_days">أيام العمل ↓</option>
+        <option value="name" data-i18n="s_name">الاسم أ-ي</option>
       </select>
     </div>
 
@@ -192,40 +193,40 @@ tr:hover td{background:rgba(234,179,8,.04)}
         <thead>
           <tr>
             <th class="rank">#</th>
-            <th>السائق</th>
-            <th>المدينة</th>
-            <th>النظام</th>
-            <th>المركبة / السكن</th>
-            <th style="text-align:center">المسلّم</th>
-            <th style="text-align:center">المرفوض</th>
-            <th style="text-align:center">القبول</th>
-            <th style="text-align:center">أيام</th>
-            <th style="text-align:center">متوسط/يوم</th>
+            <th data-i18n="t_rider">السائق</th>
+            <th data-i18n="t_city">المدينة</th>
+            <th data-i18n="t_plan">النظام</th>
+            <th data-i18n="t_veh">المركبة / السكن</th>
+            <th style="text-align:center" data-i18n="t_del">المسلّم</th>
+            <th style="text-align:center" data-i18n="t_rej">المرفوض</th>
+            <th style="text-align:center" data-i18n="t_acc">القبول</th>
+            <th style="text-align:center" data-i18n="t_days">أيام</th>
+            <th style="text-align:center" data-i18n="t_avg">متوسط/يوم</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
-      <div class="empty" id="empty" style="display:none">لا يوجد سائقون بالمعايير المختارة</div>
+      <div class="empty" id="empty" style="display:none" data-i18n="empty">لا يوجد سائقون بالمعايير المختارة</div>
     </div>
   </div>
 
   <!-- DAILY MATRIX VIEW -->
   <div class="view" id="view-daily">
     <div class="fbar">
-      <span class="fb-lbl">المدينة:</span>
-      <button class="fb-btn active" data-city-d="all" onclick="filterCityD('all')">الكل</button>
-      <button class="fb-btn" data-city-d="Riyadh" onclick="filterCityD('Riyadh')">الرياض</button>
-      <button class="fb-btn" data-city-d="Dammam" onclick="filterCityD('Dammam')">الدمام</button>
-      <button class="fb-btn" data-city-d="free" onclick="filterCityD('free')">🟡 فري لانسر</button>
-      <span class="fb-lbl" style="margin-inline-start:10px">النظام:</span>
-      <button class="fb-btn active" data-plan-d="all" onclick="filterPlan('all')">الكل</button>
-      <button class="fb-btn" data-plan-d="rent" onclick="filterPlan('rent')">نسبة (إيجار)</button>
-      <button class="fb-btn" data-plan-d="company" onclick="filterPlan('company')">نظام الشركة</button>
-      <button class="fb-btn" data-plan-d="none" onclick="filterPlan('none')">كفالة</button>
-      <input class="fb-search" id="search-d" type="text" placeholder="بحث بالاسم أو المعرف..." oninput="renderDaily()"/>
+      <span class="fb-lbl" data-i18n="f_city">المدينة:</span>
+      <button class="fb-btn active" data-city-d="all" onclick="filterCityD('all')" data-i18n="f_all">الكل</button>
+      <button class="fb-btn" data-city-d="Riyadh" onclick="filterCityD('Riyadh')" data-i18n="c_riyadh">الرياض</button>
+      <button class="fb-btn" data-city-d="Dammam" onclick="filterCityD('Dammam')" data-i18n="c_dammam">الدمام</button>
+      <button class="fb-btn" data-city-d="free" onclick="filterCityD('free')" data-i18n="c_free">🟡 فري لانسر</button>
+      <span class="fb-lbl" style="margin-inline-start:10px" data-i18n="f_plan">النظام:</span>
+      <button class="fb-btn active" data-plan-d="all" onclick="filterPlan('all')" data-i18n="f_all">الكل</button>
+      <button class="fb-btn" data-plan-d="rent" onclick="filterPlan('rent')" data-i18n="p_rent">نسبة (إيجار)</button>
+      <button class="fb-btn" data-plan-d="company" onclick="filterPlan('company')" data-i18n="p_company">نظام الشركة</button>
+      <button class="fb-btn" data-plan-d="none" onclick="filterPlan('none')" data-i18n="p_none">كفالة</button>
+      <input class="fb-search" id="search-d" type="text" placeholder="بحث بالاسم أو المعرف..." data-i18n-ph="ph_search" oninput="renderDaily()"/>
       <span style="color:var(--txt3);font-size:11px;margin-inline-start:auto">
-        <span style="color:#10b981">■</span> مسلّم
-        <span style="color:#ef4444;margin-inline-start:8px">●</span> مرفوض
+        <span style="color:#10b981">■</span> <span data-i18n="lg_del">مسلّم</span>
+        <span style="color:#ef4444;margin-inline-start:8px">●</span> <span data-i18n="lg_rej">مرفوض</span>
       </span>
     </div>
 
@@ -237,6 +238,93 @@ tr:hover td{background:rgba(234,179,8,.04)}
   <div class="foot">© 2026 Abu Iyad — All Rights Reserved</div>
 </div>
 
+<script>
+/* ====== الترجمة عربي / إنجليزي ====== */
+var lang = 'ar';
+var I18N = {
+ ar:{
+  lang_label:'EN', title:'كيتا فري لانسر', sub:'بالطلب (بدون راتب / صلاحية)', lbl_day:'يوم',
+  lbl_back:'← الرئيسية',
+  k_riders:'إجمالي السائقين', k_del:'المهام المسلّمة', k_rej:'المهام المرفوضة',
+  k_acc:'نسبة القبول', k_acc_sub:'من إجمالي المهام', k_rent:'إيجار النسبة الشهري',
+  v_summary:'📊 الملخص', v_daily:'📅 الطلبات اليومية',
+  f_city:'المدينة:', f_plan:'النظام:', f_all:'الكل',
+  c_riyadh:'الرياض', c_dammam:'الدمام', c_free:'🟡 فري لانسر',
+  p_rent:'نسبة (إيجار)', p_company:'نظام الشركة', p_none:'كفالة',
+  ph_search:'بحث بالاسم أو المعرف...',
+  s_del:'ترتيب: مسلّم ↓', s_rej:'مرفوض ↓', s_acc:'قبول% ↓', s_days:'أيام العمل ↓', s_name:'الاسم أ-ي',
+  t_rider:'السائق', t_city:'المدينة', t_plan:'النظام', t_veh:'المركبة / السكن',
+  t_del:'المسلّم', t_rej:'المرفوض', t_acc:'القبول', t_days:'أيام', t_avg:'متوسط/يوم',
+  t_total:'الإجمالي', t_daytotal:'إجمالي اليوم',
+  empty:'لا يوجد سائقون بالمعايير المختارة', lg_del:'مسلّم', lg_rej:'مرفوض',
+  tag_free:'فري لانسر', tag_free_s:'فري', tag_kafala:'كفالة',
+  plan_rent:'نسبة', plan_company:'نظام الشركة',
+  src_company:'الشركة', src_personal:'على حسابه', src_rent:'إيجار',
+  owner:'الحساب: ', merged_a:'🔗 مدموج من ', merged_b:' أكواد — آخر كود شغّال',
+  monthly:' ﷼ شهرياً', riyal:' ﷼',
+  avg:'متوسط ', per_day:'/يوم', of_total:'% من الإجمالي',
+  c_riyadh_p:' الرياض · ', c_dammam_p:' الدمام', c_free_p:' فري لانسر',
+  pl_rent:' نسبة · ', pl_company:' نظام الشركة · ', pl_none:' كفالة',
+  rejected_t:' مرفوض',
+  mon:{'08-2026':'أغسطس 2026','09-2026':'سبتمبر 2026','10-2026':'أكتوبر 2026'},
+  mon_s:{'08-2026':'أغسطس','09-2026':'سبتمبر','10-2026':'أكتوبر'},
+  city:{'Riyadh':'الرياض','Dammam':'الدمام'}
+ },
+ en:{
+  lang_label:'ع', title:'Keeta Freelancers', sub:'Per order (no salary / validity)', lbl_day:'Day',
+  lbl_back:'Home →',
+  k_riders:'Total Riders', k_del:'Completed Tasks', k_rej:'Rejected Tasks',
+  k_acc:'Acceptance Rate', k_acc_sub:'of all tasks', k_rent:'Monthly Rent (Share Plan)',
+  v_summary:'📊 Summary', v_daily:'📅 Daily Orders',
+  f_city:'City:', f_plan:'Plan:', f_all:'All',
+  c_riyadh:'Riyadh', c_dammam:'Dammam', c_free:'🟡 Freelancers',
+  p_rent:'Share (Rent)', p_company:'Company Plan', p_none:'Kafala',
+  ph_search:'Search by name or ID...',
+  s_del:'Sort: Completed ↓', s_rej:'Rejected ↓', s_acc:'Acceptance% ↓', s_days:'Work days ↓', s_name:'Name A-Z',
+  t_rider:'Rider', t_city:'City', t_plan:'Plan', t_veh:'Vehicle / Housing',
+  t_del:'Completed', t_rej:'Rejected', t_acc:'Acceptance', t_days:'Days', t_avg:'Avg/day',
+  t_total:'Total', t_daytotal:'Day total',
+  empty:'No riders match the selected filters', lg_del:'Completed', lg_rej:'Rejected',
+  tag_free:'Freelancer', tag_free_s:'Free', tag_kafala:'Kafala',
+  plan_rent:'Share', plan_company:'Company Plan',
+  src_company:'Company', src_personal:'Own expense', src_rent:'Rented',
+  owner:'Account: ', merged_a:'🔗 Merged from ', merged_b:' codes — latest active code',
+  monthly:' SAR/month', riyal:' SAR',
+  avg:'Avg ', per_day:'/day', of_total:'% of total',
+  c_riyadh_p:' Riyadh · ', c_dammam_p:' Dammam', c_free_p:' freelancers',
+  pl_rent:' share · ', pl_company:' company plan · ', pl_none:' kafala',
+  rejected_t:' rejected',
+  mon:{'08-2026':'August 2026','09-2026':'September 2026','10-2026':'October 2026'},
+  mon_s:{'08-2026':'August','09-2026':'September','10-2026':'October'},
+  city:{'Riyadh':'Riyadh','Dammam':'Dammam'}
+ }
+};
+function T(k){ var v=I18N[lang][k]; return v==null?(I18N.ar[k]||k):v; }
+function cityT(c){ return (I18N[lang].city[c]) || c; }
+function toggleLang(){
+  lang = (lang==='ar')?'en':'ar';
+  applyLang(); fillKpis(); render();
+  if(document.getElementById('view-daily').classList.contains('active')) renderDaily();
+}
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang==='ar')?'rtl':'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    el.textContent = T(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    el.placeholder = T(el.getAttribute('data-i18n-ph'));
+  });
+  var t=document.getElementById('hdr-title'); if(t) t.textContent=T('title');
+  var d=document.getElementById('lbl-day'); if(d) d.textContent=T('lbl_day');
+  var b=document.getElementById('lbl-back'); if(b) b.textContent=T('lbl_back');
+  var l=document.getElementById('lang-label'); if(l) l.textContent=T('lang_label');
+  document.querySelectorAll('.mon-btn').forEach(function(x){
+    var m=x.dataset.mon; if(m&&I18N[lang].mon_s[m]) x.textContent=I18N[lang].mon_s[m];
+  });
+  document.title = T('title');
+}
+</script>
 <script>
 var curCityD = 'all';
 function setView(v){
@@ -281,21 +369,21 @@ function renderDaily(){
     });
   });
 
-  var head = '<thead><tr><th>السائق</th>';
+  var head = '<thead><tr><th>'+T('t_rider')+'</th>';
   dates.forEach(function(d){ head += '<th>'+d+'</th>'; });
-  head += '<th style="background:#252b34">الإجمالي</th></tr></thead>';
+  head += '<th style="background:#252b34">'+T('t_total')+'</th></tr></thead>';
 
   var body = '<tbody>';
   var colTotalsDel = new Array(dates.length).fill(0);
   var colTotalsRej = new Array(dates.length).fill(0);
   list.forEach(function(r){
-    body += '<tr><td><div class="dm-name">'+r.name+(r.is_free?'<span class="free-tag">فري</span>':'')+'</div><div class="dm-id">'+r.iqama+'</div></td>';
+    body += '<tr><td><div class="dm-name">'+r.name+(r.is_free?'<span class="free-tag">'+T('tag_free_s')+'</span>':'')+'</div><div class="dm-id">'+r.iqama+'</div></td>';
     dates.forEach(function(d, i){
       var cell = r.daily[d] || {d:0, r:0};
       var cls = cellCls(cell.d, maxCell);
       colTotalsDel[i] += cell.d;
       colTotalsRej[i] += cell.r;
-      var rejDot = cell.r > 0 ? '<span class="rej-dot" title="'+cell.r+' مرفوض"></span>' : '';
+      var rejDot = cell.r > 0 ? '<span class="rej-dot" title="'+cell.r+T('rejected_t')+'"></span>' : '';
       body += '<td class="'+cls+'">'+(cell.d || '·')+rejDot+'</td>';
     });
     body += '<td style="background:#1a1e25;color:#10b981">'+r.delivered.toLocaleString('en-US')+'</td>';
@@ -303,7 +391,7 @@ function renderDaily(){
   });
   body += '</tbody>';
 
-  var foot = '<tfoot><tr><td>إجمالي اليوم</td>';
+  var foot = '<tfoot><tr><td>'+T('t_daytotal')+'</td>';
   var grand = 0;
   colTotalsDel.forEach(function(v, i){
     grand += v;
@@ -320,13 +408,12 @@ var CUR_MONTH = '09-2026';
 var DATA = KEETA_ALL[CUR_MONTH];
 var curCity = 'all';
 var curPlan = 'all';
-var PLAN_LBL={rent:'نسبة',company:'نظام الشركة',personal:'شخصي'};
 function planTag(r){
-  if(!r.plan) return '<span class="plan plan-none">كفالة</span>';
-  var txt = r.plan==='rent' ? ('نسبة '+(r.rent||'')) : (PLAN_LBL[r.plan]||r.plan);
+  if(!r.plan) return '<span class="plan plan-none">'+T('tag_kafala')+'</span>';
+  var txt = r.plan==='rent' ? (T('plan_rent')+' '+(r.rent||'')) : T('plan_company');
   return '<span class="plan plan-'+r.plan+'">'+txt+'</span>';
 }
-function srcTxt(v){ return v==='company'?'الشركة':v==='personal'?'على حسابه':v==='rent'?'إيجار':'—'; }
+function srcTxt(v){ return v==='company'?T('src_company'):v==='personal'?T('src_personal'):v==='rent'?T('src_rent'):'—'; }
 function planOk(r){
   if(curPlan==='all') return true;
   if(curPlan==='none') return !r.plan;
@@ -358,27 +445,26 @@ function setMonth(mid){
   if(document.getElementById('view-daily').classList.contains('active')) renderDaily();
 }
 
-var MON_AR={'08-2026':'أغسطس 2026','09-2026':'سبتمبر 2026','10-2026':'أكتوبر 2026'};
 function fillKpis(){
   var t = DATA.totals;
   var hs=document.getElementById('hdr-sub');
-  if(hs) hs.textContent=(MON_AR[CUR_MONTH]||CUR_MONTH)+' · بالطلب (بدون راتب / صلاحية)';
+  if(hs) hs.textContent=(I18N[lang].mon[CUR_MONTH]||CUR_MONTH)+' · '+T('sub');
   document.getElementById('last-day').textContent = t.last_day;
   document.getElementById('kpi-riders').textContent = n(t.riders);
   document.getElementById('kpi-cities').textContent =
-    t.riyadh + ' الرياض · ' + t.dammam + ' الدمام' + (t.free ? ' · ' + t.free + ' فري لانسر' : '');
+    t.riyadh + T('c_riyadh_p') + t.dammam + T('c_dammam_p') + (t.free ? ' · ' + t.free + T('c_free_p') : '');
   document.getElementById('kpi-del').textContent = n(t.delivered);
-  document.getElementById('kpi-avg').textContent = 'متوسط ' + Math.round(t.delivered/t.days) + '/يوم';
+  document.getElementById('kpi-avg').textContent = T('avg') + Math.round(t.delivered/t.days) + T('per_day');
   document.getElementById('kpi-rej').textContent = n(t.rejected);
   var tot = t.delivered + t.rejected;
   var rejPct = tot>0 ? (t.rejected*100/tot).toFixed(1) : 0;
-  document.getElementById('kpi-rej-pct').textContent = rejPct + '% من الإجمالي';
+  document.getElementById('kpi-rej-pct').textContent = rejPct + T('of_total');
   var acc = tot>0 ? (t.delivered*100/tot).toFixed(1) : 0;
   document.getElementById('kpi-acc').textContent = acc + '%';
   var pl = t.plans||{}, rentDue = t.rent_due||0;
-  var er=document.getElementById('kpi-rent'); if(er) er.textContent = n(rentDue) + ' ﷼';
+  var er=document.getElementById('kpi-rent'); if(er) er.textContent = n(rentDue) + T('riyal');
   var ep=document.getElementById('kpi-plans');
-  if(ep) ep.textContent = (pl.rent||0)+' نسبة · '+(pl.company||0)+' نظام الشركة · '+(pl['—']||0)+' كفالة';
+  if(ep) ep.textContent = (pl.rent||0)+T('pl_rent')+(pl.company||0)+T('pl_company')+(pl['—']||0)+T('pl_none');
 }
 
 function filterCity(c){
@@ -407,7 +493,7 @@ function render(){
     rejected:  function(a,b){return b.rejected - a.rejected},
     acceptance:function(a,b){return b.acceptance_rate - a.acceptance_rate},
     days:      function(a,b){return b.work_days - a.work_days},
-    name:      function(a,b){return a.name.localeCompare(b.name,'ar')},
+    name:      function(a,b){return a.name.localeCompare(b.name, lang==='ar'?'ar':'en')},
   };
   list.sort(sorters[sortBy]);
 
@@ -426,13 +512,13 @@ function render(){
     var avg = r.work_days>0 ? Math.round(r.delivered/r.work_days) : 0;
     return '<tr>' +
       '<td class="rank'+rankCls+'">'+rank+'</td>' +
-      '<td><div class="name">'+r.name+(r.is_free?'<span class="free-tag">فري لانسر</span>':'')+'</div>' +
+      '<td><div class="name">'+r.name+(r.is_free?'<span class="free-tag">'+T('tag_free')+'</span>':'')+'</div>' +
         '<div class="id">'+r.iqama+'</div>' +
-        (r.is_free && r.owner ? '<div class="owner-note">الحساب: '+r.owner+'</div>' : '') +
-        (r.merged>1 ? '<div class="owner-note" title="'+(r.merged_codes||[]).join(' · ')+'">🔗 مدموج من '+r.merged+' أكواد — آخر كود شغّال</div>' : '') +
+        (r.is_free && r.owner ? '<div class="owner-note">'+T('owner')+r.owner+'</div>' : '') +
+        (r.merged>1 ? '<div class="owner-note" title="'+(r.merged_codes||[]).join(' · ')+'">'+T('merged_a')+r.merged+T('merged_b')+'</div>' : '') +
       '</td>' +
-      '<td><span class="city-p city-'+r.city.split(' ')[0]+'">'+r.city+'</span></td>' +
-      '<td>'+planTag(r)+(r.rent?'<div class="sub-i">'+n(r.rent)+' ﷼ شهرياً</div>':'')+'</td>' +
+      '<td><span class="city-p city-'+r.city.split(' ')[0]+'">'+cityT(r.city)+'</span></td>' +
+      '<td>'+planTag(r)+(r.rent?'<div class="sub-i">'+n(r.rent)+T('monthly')+'</div>':'')+'</td>' +
       '<td><div class="sub-i">🛵 <b>'+srcTxt(r.vehicle_src)+'</b>'+(r.plate?' · '+r.plate:'')+'</div>' +
         '<div class="sub-i">🏠 <b>'+srcTxt(r.room)+'</b>'+(r.mobile?' · '+r.mobile:'')+'</div></td>' +
       '<td style="text-align:center" class="num n-hi">'+n(r.delivered)+'</td>' +
@@ -447,6 +533,7 @@ function render(){
   tb.innerHTML = rows;
 }
 
+applyLang();
 fillKpis();
 render();
 </script>
