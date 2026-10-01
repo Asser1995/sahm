@@ -6,16 +6,16 @@
 <title>مركز المتابعة — اختر المنصة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#070809;--card:#101319;--brd:#1e2530;--txt:#e2e8f0;--txt2:#94a3b8;--txt3:#5b6675;
---hunger:#f97316;--keeta:#eab308;--hr:#22d3ee;--compare:#a855f7;--masar:#0ea5e9;--spv:#10b981;--amr:#E3B341}
+:root{--bg:#F6F4F0;--card:#FFFFFF;--brd:#E7E3DB;--txt:#1B1A17;--txt2:#55504A;--txt3:#6E685F;
+--hunger:#B55A1E;--keeta:#9A6B0F;--hr:#1C3F5E;--compare:#5A5F7A;--masar:#1C3F5E;--spv:#2E7D4F;--amr:#9A6B0F}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
   display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 60% 50% at 25% 30%,rgba(249,115,22,.10),transparent),
-  radial-gradient(ellipse 60% 50% at 75% 70%,rgba(234,179,8,.10),transparent),
-  linear-gradient(rgba(148,163,184,.015)1px,transparent 1px),
-  linear-gradient(90deg,rgba(148,163,184,.015)1px,transparent 1px);
+  background:radial-gradient(ellipse 60% 50% at 25% 30%,rgba(181,90,30,0.085),transparent),
+  radial-gradient(ellipse 60% 50% at 75% 70%,rgba(154,107,15,0.085),transparent),
+  linear-gradient(rgba(85,80,74,0.013)1px,transparent 1px),
+  linear-gradient(90deg,rgba(85,80,74,0.013)1px,transparent 1px);
   background-size:100%,100%,46px 46px,46px 46px}
 .wrap{position:relative;z-index:1;width:100%;max-width:1320px;text-align:center}
 .brand{margin-bottom:8px;font-size:13px;color:var(--txt3);letter-spacing:3px;font-weight:600;
@@ -39,12 +39,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .pcard:hover .go{gap:14px;color:var(--ac)}
 .ic{width:78px;height:78px;border-radius:20px;display:flex;align-items:center;justify-content:center;
   font-size:38px;margin:0 auto 20px;transition:.35s;position:relative;z-index:1}
-.hunger .ic{background:linear-gradient(135deg,rgba(249,115,22,.2),rgba(249,115,22,.05));
-  border:1px solid rgba(249,115,22,.3);box-shadow:0 0 40px rgba(249,115,22,.15)}
-.keeta .ic{background:linear-gradient(135deg,rgba(234,179,8,.2),rgba(234,179,8,.05));
-  border:1px solid rgba(234,179,8,.3);box-shadow:0 0 40px rgba(234,179,8,.15)}
-.hr .ic{background:linear-gradient(135deg,rgba(34,211,238,.2),rgba(34,211,238,.05));
-  border:1px solid rgba(34,211,238,.3);box-shadow:0 0 40px rgba(34,211,238,.15)}
+.hunger .ic{background:linear-gradient(135deg,rgba(181,90,30,0.17),rgba(181,90,30,0.043));
+  border:1px solid rgba(181,90,30,0.255);box-shadow:0 0 40px rgba(181,90,30,0.128)}
+.keeta .ic{background:linear-gradient(135deg,rgba(154,107,15,0.17),rgba(154,107,15,0.043));
+  border:1px solid rgba(154,107,15,0.255);box-shadow:0 0 40px rgba(154,107,15,0.128)}
+.hr .ic{background:linear-gradient(135deg,rgba(28,63,94,0.17),rgba(28,63,94,0.043));
+  border:1px solid rgba(28,63,94,0.255);box-shadow:0 0 40px rgba(28,63,94,0.128)}
 .pname{font-size:26px;font-weight:900;margin-bottom:6px;position:relative;z-index:1}
 .pdesc{font-size:12px;color:var(--txt3);margin-bottom:22px;position:relative;z-index:1}
 .stats{display:flex;justify-content:center;gap:26px;margin-bottom:24px;position:relative;z-index:1}
@@ -53,50 +53,50 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .stat-l{font-size:10px;color:var(--txt3);margin-top:2px}
 .go{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
   color:var(--txt2);transition:.3s;position:relative;z-index:1}
-.hunger{--ac:var(--hunger);--glow:rgba(249,115,22,1)}
-.keeta{--ac:var(--keeta);--glow:rgba(234,179,8,1)}
-.hr{--ac:var(--hr);--glow:rgba(34,211,238,1)}
-.compare{--ac:var(--compare);--glow:rgba(168,85,247,1)}
-.compare .ic{background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(168,85,247,.05));border:1px solid rgba(168,85,247,.3);box-shadow:0 0 40px rgba(168,85,247,.15)}
-.spv{--ac:var(--spv);--glow:rgba(16,185,129,1)}
-.spv .ic{background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(16,185,129,.05));border:1px solid rgba(16,185,129,.3);box-shadow:0 0 40px rgba(16,185,129,.15)}
-.masar{--ac:var(--masar);--glow:rgba(14,165,233,1)}
-.amr{--ac:var(--amr);--glow:rgba(227,179,65,1)}
-.amr .ic{background:linear-gradient(135deg,rgba(227,179,65,.2),rgba(227,179,65,.05));border:1px solid rgba(227,179,65,.3);box-shadow:0 0 40px rgba(227,179,65,.15)}
-.masar .ic{background:linear-gradient(135deg,rgba(14,165,233,.2),rgba(14,165,233,.05));border:1px solid rgba(14,165,233,.3);box-shadow:0 0 40px rgba(14,165,233,.15)}
+.hunger{--ac:var(--hunger);--glow:rgba(181,90,30,1.0)}
+.keeta{--ac:var(--keeta);--glow:rgba(154,107,15,1.0)}
+.hr{--ac:var(--hr);--glow:rgba(28,63,94,1.0)}
+.compare{--ac:var(--compare);--glow:rgba(90,95,122,1.0)}
+.compare .ic{background:linear-gradient(135deg,rgba(90,95,122,0.17),rgba(90,95,122,0.043));border:1px solid rgba(90,95,122,0.255);box-shadow:0 0 40px rgba(90,95,122,0.128)}
+.spv{--ac:var(--spv);--glow:rgba(46,125,79,1.0)}
+.spv .ic{background:linear-gradient(135deg,rgba(46,125,79,0.17),rgba(46,125,79,0.043));border:1px solid rgba(46,125,79,0.255);box-shadow:0 0 40px rgba(46,125,79,0.128)}
+.masar{--ac:var(--masar);--glow:rgba(28,63,94,1.0)}
+.amr{--ac:var(--amr);--glow:rgba(154,107,15,1.0)}
+.amr .ic{background:linear-gradient(135deg,rgba(154,107,15,0.17),rgba(154,107,15,0.043));border:1px solid rgba(154,107,15,0.255);box-shadow:0 0 40px rgba(154,107,15,0.128)}
+.masar .ic{background:linear-gradient(135deg,rgba(28,63,94,0.17),rgba(28,63,94,0.043));border:1px solid rgba(28,63,94,0.255);box-shadow:0 0 40px rgba(28,63,94,0.128)}
 .pcard:nth-child(5){animation-delay:.78s}
 .foot{margin-top:38px;font-size:11px;color:var(--txt3);opacity:0;animation:fade .6s ease .6s forwards}
-.live{width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;
+.live{width:6px;height:6px;border-radius:50%;background:#2E7D4F;display:inline-block;
   animation:pulse 2s infinite;margin-left:5px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 @keyframes fade{to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 /* ── Login ── */
-#login-overlay{position:fixed;inset:0;z-index:9999;background:#070809;display:flex;align-items:center;justify-content:center}
-#login-box{background:#101319;border:1px solid #1e2530;border-radius:24px;padding:48px 44px;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px rgba(249,115,22,.08)}
+#login-overlay{position:fixed;inset:0;z-index:9999;background:#F6F4F0;display:flex;align-items:center;justify-content:center}
+#login-box{background:#FFFFFF;border:1px solid #E7E3DB;border-radius:24px;padding:48px 44px;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px rgba(181,90,30,0.068)}
 #login-box .logo{font-size:42px;margin-bottom:16px}
-#login-box h2{font-size:22px;font-weight:900;margin-bottom:6px;color:#e2e8f0}
-#login-box p{font-size:12px;color:#5b6675;margin-bottom:32px;letter-spacing:2px}
-#login-box input{width:100%;background:#070809;border:1px solid #1e2530;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s}
-#login-box input:focus,#login-box select:focus{border-color:#f97316}
-#login-box button{width:100%;padding:13px;background:linear-gradient(135deg,#f97316,#ea580c);border:none;border-radius:10px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.25s;margin-top:4px}
+#login-box h2{font-size:22px;font-weight:900;margin-bottom:6px;color:#1B1A17}
+#login-box p{font-size:12px;color:#6E685F;margin-bottom:32px;letter-spacing:2px}
+#login-box input{width:100%;background:#F6F4F0;border:1px solid #E7E3DB;border-radius:10px;padding:13px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s}
+#login-box input:focus,#login-box select:focus{border-color:#B55A1E}
+#login-box button{width:100%;padding:13px;background:linear-gradient(135deg,#B55A1E,#B55A1E);border:none;border-radius:10px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.25s;margin-top:4px}
 #login-box button:hover{opacity:.88}
-#login-err{color:#ef4444;font-size:13px;margin-top:12px;min-height:20px}
+#login-err{color:#B3453C;font-size:13px;margin-top:12px;min-height:20px}
 
 /* ---- مؤشر التنقّل ---- */
 #nav-rail{position:fixed;inset-inline-end:16px;top:50%;transform:translateY(-50%);z-index:900;
  display:flex;flex-direction:column;align-items:center;gap:10px;
  opacity:0;pointer-events:none;transition:opacity .3s}
 #nav-rail.show{opacity:1;pointer-events:auto}
-.nr-btn{width:38px;height:38px;border-radius:12px;border:1px solid #232c3a;background:rgba(16,19,25,.92);
+.nr-btn{width:38px;height:38px;border-radius:12px;border:1px solid #E2DED6;background:rgba(255,255,255,0.92);
  backdrop-filter:blur(8px);color:#8494a8;font-size:15px;cursor:pointer;display:grid;place-items:center;
  transition:.18s;padding:0;line-height:1}
-.nr-btn:hover:not(:disabled){color:#e2e8f0;border-color:#3a465a;background:rgba(28,34,44,.95)}
+.nr-btn:hover:not(:disabled){color:#1B1A17;border-color:#CBC5B9;background:rgba(28,34,44,.95)}
 .nr-btn:disabled{opacity:.28;cursor:default}
-.nr-track{width:4px;border-radius:3px;background:#1b2230;height:120px;overflow:hidden;position:relative}
+.nr-track{width:4px;border-radius:3px;background:#EFECE6;height:120px;overflow:hidden;position:relative}
 #nr-fill{position:absolute;inset-inline:0;top:0;border-radius:3px;
- background:linear-gradient(180deg,#f97316,#22d3ee);transition:height .12s linear}
-.nr-pct{font-size:9.5px;color:#61708a;font-weight:800;font-variant-numeric:tabular-nums}
+ background:linear-gradient(180deg,#B55A1E,#1C3F5E);transition:height .12s linear}
+.nr-pct{font-size:9.5px;color:#6E685F;font-weight:800;font-variant-numeric:tabular-nums}
 @media(max-width:820px){#nav-rail{inset-inline-end:10px;gap:8px}.nr-track{height:80px}
  .nr-btn{width:34px;height:34px;font-size:14px}}
 @media(prefers-reduced-motion:reduce){#nr-fill{transition:none}}
@@ -109,8 +109,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     <div class="logo">🔐</div>
     <h2>مركز المتابعة</h2>
     <p>DELIVERY OPERATIONS — RESTRICTED</p>
-    <select id="inp-user" style="width:100%;background:#070809;border:1px solid #1e2530;border-radius:10px;padding:13px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s;-webkit-appearance:none;appearance:none">
-  <option value="" disabled selected style="color:#5b6675">… جاري تحميل الأسماء</option>
+    <select id="inp-user" style="width:100%;background:#F6F4F0;border:1px solid #E7E3DB;border-radius:10px;padding:13px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s;-webkit-appearance:none;appearance:none">
+  <option value="" disabled selected style="color:#6E685F">… جاري تحميل الأسماء</option>
 </select>
     <input type="password" id="inp-pass" placeholder="كلمة المرور" autocomplete="current-password" />
     <button onclick="doLogin()">دخول</button>
@@ -201,13 +201,13 @@ document.addEventListener('DOMContentLoaded', function(){
     if(!res||!res.ok||!res.names||!res.names.length) return;
     var sel=document.getElementById('inp-user');
     var cur=sel.value;
-    sel.innerHTML='<option value="" disabled selected style="color:#5b6675">اختر اسمك</option>'+
+    sel.innerHTML='<option value="" disabled selected style="color:#6E685F">اختر اسمك</option>'+
       res.names.map(function(n){ return '<option>'+n.replace(/</g,'&lt;')+'</option>'; }).join('');
     if(cur) sel.value=cur;
   }, function(){
     var sel=document.getElementById('inp-user');
     if(sel && sel.options.length<=1)
-      sel.innerHTML='<option value="" disabled selected style="color:#f87171">تعذّر تحميل الأسماء — حدّث الصفحة</option>';
+      sel.innerHTML='<option value="" disabled selected style="color:#B3453C">تعذّر تحميل الأسماء — حدّث الصفحة</option>';
   });
 });
 function grant(user, role, hash){
@@ -282,7 +282,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="pname">كيتا فري لانسر</div>
       <div class="pdesc">Keeta — بالطلب (بدون راتب/صلاحية)</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">79</div><div class="stat-l">سائق</div></div>
+        <div class="stat"><div class="stat-v">83</div><div class="stat-l">سائق</div></div>
         <div class="stat"><div class="stat-v">سبتمبر</div><div class="stat-l">الشهر</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
@@ -329,21 +329,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="go">🔒 دخول <span>←</span></div>
     </a>
   </div>
-  <div class="foot">📅 آخر تحديث: 30/09/2026 — البيانات من Google Drive</div>
-<div id="who-chip" style="display:none;position:fixed;bottom:18px;left:106px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:20px;height:36px;line-height:34px;padding:0 8px 0 14px;font-family:'Cairo',sans-serif;font-size:12px;color:#94a3b8;opacity:.55;transition:.25s;display:none;align-items:center;gap:8px" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.55'"><span id="who-name" style="font-weight:700;color:#e2e8f0"></span><button onclick="doLogout()" title="تسجيل الخروج" style="background:#1e2530;border:1px solid #2a3344;border-radius:14px;padding:3px 11px;color:#f87171;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer">خروج</button></div>
-<a id="usr-btn" href="users_admin.html" title="إدارة المستخدمين" style="display:none;position:fixed;bottom:18px;left:62px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0;text-decoration:none" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">👥</a>
-<button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#101319;border:1px solid #1e2530;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
+  <div class="foot">📅 آخر تحديث: 01/10/2026 — البيانات من Google Drive</div>
+<div id="who-chip" style="display:none;position:fixed;bottom:18px;left:106px;z-index:999;background:#FFFFFF;border:1px solid #E7E3DB;border-radius:20px;height:36px;line-height:34px;padding:0 8px 0 14px;font-family:'Cairo',sans-serif;font-size:12px;color:#55504A;opacity:.55;transition:.25s;display:none;align-items:center;gap:8px" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.55'"><span id="who-name" style="font-weight:700;color:#1B1A17"></span><button onclick="doLogout()" title="تسجيل الخروج" style="background:#E7E3DB;border:1px solid #E2DED6;border-radius:14px;padding:3px 11px;color:#B3453C;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer">خروج</button></div>
+<a id="usr-btn" href="users_admin.html" title="إدارة المستخدمين" style="display:none;position:fixed;bottom:18px;left:62px;z-index:999;background:#FFFFFF;border:1px solid #E7E3DB;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0;text-decoration:none" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">👥</a>
+<button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#FFFFFF;border:1px solid #E7E3DB;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
 </div>
 
 <!-- ── Analytics Modal ── -->
-<div id="anl-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(7,8,9,.97);overflow-y:auto;font-family:'Cairo',sans-serif;direction:rtl">
+<div id="anl-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(246,244,240,0.97);overflow-y:auto;font-family:'Cairo',sans-serif;direction:rtl">
   <div style="max-width:880px;margin:32px auto;padding:0 16px 40px">
-    <div style="background:#101319;border:1px solid #1e2530;border-radius:20px;padding:28px 32px">
+    <div style="background:#FFFFFF;border:1px solid #E7E3DB;border-radius:20px;padding:28px 32px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
-        <h2 style="font-size:20px;font-weight:900;color:#e2e8f0;margin:0">📊 سجل الزيارات</h2><a href='https://docs.google.com/spreadsheets/d/1ggds55EAI47UTP8i1IL9CSztHQmTqn8rztDAf3yVzCw/edit' target='_blank' style='background:#1e2530;border:1px solid #2a3344;border-radius:8px;padding:8px 18px;color:#22d3ee;font-family:Cairo,sans-serif;font-size:13px;text-decoration:none;white-space:nowrap'>📋 Google Sheet</a>
+        <h2 style="font-size:20px;font-weight:900;color:#1B1A17;margin:0">📊 سجل الزيارات</h2><a href='https://docs.google.com/spreadsheets/d/1ggds55EAI47UTP8i1IL9CSztHQmTqn8rztDAf3yVzCw/edit' target='_blank' style='background:#E7E3DB;border:1px solid #E2DED6;border-radius:8px;padding:8px 18px;color:#1C3F5E;font-family:Cairo,sans-serif;font-size:13px;text-decoration:none;white-space:nowrap'>📋 Google Sheet</a>
         <div style="display:flex;gap:10px">
-          <button onclick="anl_clear()" style="background:#1e2530;border:1px solid #2a3344;border-radius:8px;padding:8px 18px;color:#94a3b8;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer">🗑 مسح السجل</button>
-          <button onclick="anl_close()" style="background:#1e2530;border:1px solid #2a3344;border-radius:8px;padding:8px 16px;color:#e2e8f0;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer">✕</button>
+          <button onclick="anl_clear()" style="background:#E7E3DB;border:1px solid #E2DED6;border-radius:8px;padding:8px 18px;color:#55504A;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer">🗑 مسح السجل</button>
+          <button onclick="anl_close()" style="background:#E7E3DB;border:1px solid #E2DED6;border-radius:8px;padding:8px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer">✕</button>
         </div>
       </div>
       <div id="anl-summary" style="display:flex;gap:14px;margin-bottom:22px;flex-wrap:wrap"></div>
@@ -364,34 +364,34 @@ function anl_render(){
   var todayN=log.filter(function(e){return new Date(e.ts).toDateString()===today;}).length;
   var pc={};log.forEach(function(e){pc[e.page]=(pc[e.page]||0)+1;});
   var top=Object.keys(pc).sort(function(a,b){return pc[b]-pc[a];})[0]||'—';
-  var cards=[{l:'إجمالي الزيارات',v:all.length,c:'#f97316'},{l:'زيارات اليوم',v:todayN,c:'#3498db'},{l:'أكثر صفحة',v:top,c:'#a855f7'}];
+  var cards=[{l:'إجمالي الزيارات',v:all.length,c:'#B55A1E'},{l:'زيارات اليوم',v:todayN,c:'#3498db'},{l:'أكثر صفحة',v:top,c:'#5A5F7A'}];
   document.getElementById('anl-summary').innerHTML=cards.map(function(x){
-    return '<div style="background:#070809;border:1px solid #1e2530;border-radius:12px;padding:16px 20px;flex:1;min-width:130px;text-align:center">'+
+    return '<div style="background:#F6F4F0;border:1px solid #E7E3DB;border-radius:12px;padding:16px 20px;flex:1;min-width:130px;text-align:center">'+
       '<div style="font-size:22px;font-weight:900;color:'+x.c+'">'+x.v+'</div>'+
-      '<div style="font-size:11px;color:#5b6675;margin-top:4px">'+x.l+'</div></div>';
+      '<div style="font-size:11px;color:#6E685F;margin-top:4px">'+x.l+'</div></div>';
   }).join('');
-  if(!log.length){document.getElementById('anl-table').innerHTML='<div style="text-align:center;color:#5b6675;padding:40px;font-size:14px">لا توجد زيارات مسجلة بعد</div>';return;}
+  if(!log.length){document.getElementById('anl-table').innerHTML='<div style="text-align:center;color:#6E685F;padding:40px;font-size:14px">لا توجد زيارات مسجلة بعد</div>';return;}
   var rows=log.map(function(e){
     var d=new Date(e.ts);
     var dt=d.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'});
     var tm=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     var rgb=PAGE_CLR[e.page]||'148,163,184';
-    return '<tr style="border-bottom:1px solid #1a2030">'+
-      '<td style="padding:10px 16px;color:#94a3b8;font-size:13px">'+dt+'</td>'+
-      '<td style="padding:10px 16px;color:#5b6675;font-size:13px">'+tm+'</td>'+
-      '<td style="padding:10px 16px;color:#e2e8f0;font-size:13px;font-weight:600">'+(e.user||'—')+'</td>'+
-      '<td style="padding:10px 16px;color:#22d3ee;font-size:12px">'+(e.action||'فتح الصفحة')+'</td>'+
+    return '<tr style="border-bottom:1px solid #EFECE6">'+
+      '<td style="padding:10px 16px;color:#55504A;font-size:13px">'+dt+'</td>'+
+      '<td style="padding:10px 16px;color:#6E685F;font-size:13px">'+tm+'</td>'+
+      '<td style="padding:10px 16px;color:#1B1A17;font-size:13px;font-weight:600">'+(e.user||'—')+'</td>'+
+      '<td style="padding:10px 16px;color:#1C3F5E;font-size:12px">'+(e.action||'فتح الصفحة')+'</td>'+
       '<td style="padding:10px 16px"><span style="background:rgba('+rgb+',.14);color:rgb('+rgb+');padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700">'+e.page+'</span></td>'+
       '</tr>';
   }).join('');
   document.getElementById('anl-table').innerHTML=
     '<table style="width:100%;border-collapse:collapse">'+
-    '<thead><tr style="border-bottom:2px solid #1e2530">'+
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">التاريخ</th>'+ 
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الوقت</th>'+
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">المستخدم</th>'+ 
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الإجراء</th>'+
-    '<th style="padding:8px 16px;color:#5b6675;font-size:12px;font-weight:600;text-align:right">الصفحة</th>'+
+    '<thead><tr style="border-bottom:2px solid #E7E3DB">'+
+    '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">التاريخ</th>'+ 
+    '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">الوقت</th>'+
+    '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">المستخدم</th>'+ 
+    '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">الإجراء</th>'+
+    '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">الصفحة</th>'+
     '</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')anl_close();});
