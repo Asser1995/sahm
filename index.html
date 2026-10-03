@@ -6,8 +6,8 @@
 <title>مركز المتابعة — اختر المنصة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F6F4F0;--card:#FFFFFF;--brd:#E7E3DB;--txt:#1B1A17;--txt2:#55504A;--txt3:#6E685F;
---hunger:#B55A1E;--keeta:#9A6B0F;--hr:#1C3F5E;--compare:#5A5F7A;--masar:#1C3F5E;--spv:#2E7D4F;--amr:#9A6B0F}
+:root{--bg:#EDE9E1;--card:#F9F7F2;--brd:#DCD7CB;--txt:#1B1A17;--txt2:#55504A;--txt3:#6E685F;
+--hunger:#B55A1E;--keeta:#8C600D;--hr:#1C3F5E;--compare:#5A5F7A;--masar:#1C3F5E;--spv:#2E7D4F;--amr:#8C600D}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
   display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}
@@ -72,12 +72,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 @keyframes fade{to{opacity:1}}
 @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 /* ── Login ── */
-#login-overlay{position:fixed;inset:0;z-index:9999;background:#F6F4F0;display:flex;align-items:center;justify-content:center}
-#login-box{background:#FFFFFF;border:1px solid #E7E3DB;border-radius:24px;padding:48px 44px;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px rgba(181,90,30,0.068)}
+#login-overlay{position:fixed;inset:0;z-index:9999;background:#EDE9E1;display:flex;align-items:center;justify-content:center}
+#login-box{background:#F9F7F2;border:1px solid #DCD7CB;border-radius:24px;padding:48px 44px;width:100%;max-width:400px;text-align:center;box-shadow:0 0 80px rgba(181,90,30,0.068)}
 #login-box .logo{font-size:42px;margin-bottom:16px}
 #login-box h2{font-size:22px;font-weight:900;margin-bottom:6px;color:#1B1A17}
 #login-box p{font-size:12px;color:#6E685F;margin-bottom:32px;letter-spacing:2px}
-#login-box input{width:100%;background:#F6F4F0;border:1px solid #E7E3DB;border-radius:10px;padding:13px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s}
+#login-box input{width:100%;background:#EDE9E1;border:1px solid #DCD7CB;border-radius:10px;padding:13px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s}
 #login-box input:focus,#login-box select:focus{border-color:#B55A1E}
 #login-box button{width:100%;padding:13px;background:linear-gradient(135deg,#B55A1E,#B55A1E);border:none;border-radius:10px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:.25s;margin-top:4px}
 #login-box button:hover{opacity:.88}
@@ -88,12 +88,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
  display:flex;flex-direction:column;align-items:center;gap:10px;
  opacity:0;pointer-events:none;transition:opacity .3s}
 #nav-rail.show{opacity:1;pointer-events:auto}
-.nr-btn{width:38px;height:38px;border-radius:12px;border:1px solid #E2DED6;background:rgba(255,255,255,0.92);
+.nr-btn{width:38px;height:38px;border-radius:12px;border:1px solid #D9D3C7;background:rgba(255,255,255,0.92);
  backdrop-filter:blur(8px);color:#8494a8;font-size:15px;cursor:pointer;display:grid;place-items:center;
  transition:.18s;padding:0;line-height:1}
-.nr-btn:hover:not(:disabled){color:#1B1A17;border-color:#CBC5B9;background:rgba(28,34,44,.95)}
+.nr-btn:hover:not(:disabled){color:#1B1A17;border-color:#BFB8A8;background:rgba(28,34,44,.95)}
 .nr-btn:disabled{opacity:.28;cursor:default}
-.nr-track{width:4px;border-radius:3px;background:#EFECE6;height:120px;overflow:hidden;position:relative}
+.nr-track{width:4px;border-radius:3px;background:#E4DFD5;height:120px;overflow:hidden;position:relative}
 #nr-fill{position:absolute;inset-inline:0;top:0;border-radius:3px;
  background:linear-gradient(180deg,#B55A1E,#1C3F5E);transition:height .12s linear}
 .nr-pct{font-size:9.5px;color:#6E685F;font-weight:800;font-variant-numeric:tabular-nums}
@@ -103,13 +103,14 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 </style>
 </head>
 <body>
+
 <!-- Login overlay -->
 <div id="login-overlay">
   <div id="login-box">
     <div class="logo">🔐</div>
     <h2>مركز المتابعة</h2>
     <p>DELIVERY OPERATIONS — RESTRICTED</p>
-    <select id="inp-user" style="width:100%;background:#F6F4F0;border:1px solid #E7E3DB;border-radius:10px;padding:13px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s;-webkit-appearance:none;appearance:none">
+    <select id="inp-user" style="width:100%;background:#EDE9E1;border:1px solid #DCD7CB;border-radius:10px;padding:13px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;outline:none;margin-bottom:14px;transition:.25s;-webkit-appearance:none;appearance:none">
   <option value="" disabled selected style="color:#6E685F">… جاري تحميل الأسماء</option>
 </select>
     <input type="password" id="inp-pass" placeholder="كلمة المرور" autocomplete="current-password" />
@@ -262,8 +263,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="pname">هنقر</div>
       <div class="pdesc">HungerStation — متابعة الأداء والأهداف</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">134</div><div class="stat-l">سائق</div></div>
-        <div class="stat"><div class="stat-v">سبتمبر</div><div class="stat-l">الشهر الحالي</div></div>
+        <div class="stat"><div class="stat-v">130</div><div class="stat-l">سائق</div></div>
+        <div class="stat"><div class="stat-v">أكتوبر</div><div class="stat-l">الشهر الحالي</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
     </a>
@@ -282,8 +283,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="pname">كيتا فري لانسر</div>
       <div class="pdesc">Keeta — بالطلب (بدون راتب/صلاحية)</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">83</div><div class="stat-l">سائق</div></div>
-        <div class="stat"><div class="stat-v">سبتمبر</div><div class="stat-l">الشهر</div></div>
+        <div class="stat"><div class="stat-v">70</div><div class="stat-l">سائق</div></div>
+        <div class="stat"><div class="stat-v">أكتوبر</div><div class="stat-l">الشهر</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
     </a>
@@ -303,7 +304,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="pdesc">HungerStation — فرع مسار ماب</div>
       <div class="stats">
         <div class="stat"><div class="stat-v">39</div><div class="stat-l">سائق</div></div>
-        <div class="stat"><div class="stat-v">سبتمبر</div><div class="stat-l">الشهر الحالي</div></div>
+        <div class="stat"><div class="stat-v">أكتوبر</div><div class="stat-l">الشهر الحالي</div></div>
 
       </div>
       <div class="go">دخول <span>←</span></div>
@@ -313,7 +314,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="pname">أمريكانا</div>
       <div class="pdesc">توصيل فري لانسر — الأداء اليومي والتغطية</div>
       <div class="stats">
-        <div class="stat"><div class="stat-v">11</div><div class="stat-l">مندوب</div></div>
+        <div class="stat"><div class="stat-v">9</div><div class="stat-l">مندوب</div></div>
         <div class="stat"><div class="stat-v">341</div><div class="stat-l">فرع</div></div>
       </div>
       <div class="go">دخول <span>←</span></div>
@@ -329,21 +330,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
       <div class="go">🔒 دخول <span>←</span></div>
     </a>
   </div>
-  <div class="foot">📅 آخر تحديث: 01/10/2026 — البيانات من Google Drive</div>
-<div id="who-chip" style="display:none;position:fixed;bottom:18px;left:106px;z-index:999;background:#FFFFFF;border:1px solid #E7E3DB;border-radius:20px;height:36px;line-height:34px;padding:0 8px 0 14px;font-family:'Cairo',sans-serif;font-size:12px;color:#55504A;opacity:.55;transition:.25s;display:none;align-items:center;gap:8px" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.55'"><span id="who-name" style="font-weight:700;color:#1B1A17"></span><button onclick="doLogout()" title="تسجيل الخروج" style="background:#E7E3DB;border:1px solid #E2DED6;border-radius:14px;padding:3px 11px;color:#B3453C;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer">خروج</button></div>
-<a id="usr-btn" href="users_admin.html" title="إدارة المستخدمين" style="display:none;position:fixed;bottom:18px;left:62px;z-index:999;background:#FFFFFF;border:1px solid #E7E3DB;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0;text-decoration:none" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">👥</a>
-<button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#FFFFFF;border:1px solid #E7E3DB;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
+  <div class="foot">📅 أكتوبر 2026 · آخر تحديث: 03/10/2026 — البيانات من Google Drive</div>
+<div id="who-chip" style="display:none;position:fixed;bottom:18px;left:106px;z-index:999;background:#F9F7F2;border:1px solid #DCD7CB;border-radius:20px;height:36px;line-height:34px;padding:0 8px 0 14px;font-family:'Cairo',sans-serif;font-size:12px;color:#55504A;opacity:.55;transition:.25s;display:none;align-items:center;gap:8px" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.55'"><span id="who-name" style="font-weight:700;color:#1B1A17"></span><button onclick="doLogout()" title="تسجيل الخروج" style="background:#DCD7CB;border:1px solid #D9D3C7;border-radius:14px;padding:3px 11px;color:#B3453C;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;cursor:pointer">خروج</button></div>
+<a id="usr-btn" href="users_admin.html" title="إدارة المستخدمين" style="display:none;position:fixed;bottom:18px;left:62px;z-index:999;background:#F9F7F2;border:1px solid #DCD7CB;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0;text-decoration:none" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">👥</a>
+<button id="anl-btn" onclick="anl_open()" title="سجل الزيارات" style="display:none;position:fixed;bottom:18px;left:18px;z-index:999;background:#F9F7F2;border:1px solid #DCD7CB;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;opacity:.35;transition:.25s;line-height:36px;text-align:center;padding:0" onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.35'">📊</button>
 </div>
 
 <!-- ── Analytics Modal ── -->
 <div id="anl-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(246,244,240,0.97);overflow-y:auto;font-family:'Cairo',sans-serif;direction:rtl">
   <div style="max-width:880px;margin:32px auto;padding:0 16px 40px">
-    <div style="background:#FFFFFF;border:1px solid #E7E3DB;border-radius:20px;padding:28px 32px">
+    <div style="background:#F9F7F2;border:1px solid #DCD7CB;border-radius:20px;padding:28px 32px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
-        <h2 style="font-size:20px;font-weight:900;color:#1B1A17;margin:0">📊 سجل الزيارات</h2><a href='https://docs.google.com/spreadsheets/d/1ggds55EAI47UTP8i1IL9CSztHQmTqn8rztDAf3yVzCw/edit' target='_blank' style='background:#E7E3DB;border:1px solid #E2DED6;border-radius:8px;padding:8px 18px;color:#1C3F5E;font-family:Cairo,sans-serif;font-size:13px;text-decoration:none;white-space:nowrap'>📋 Google Sheet</a>
+        <h2 style="font-size:20px;font-weight:900;color:#1B1A17;margin:0">📊 سجل الزيارات</h2><a href='https://docs.google.com/spreadsheets/d/1ggds55EAI47UTP8i1IL9CSztHQmTqn8rztDAf3yVzCw/edit' target='_blank' style='background:#DCD7CB;border:1px solid #D9D3C7;border-radius:8px;padding:8px 18px;color:#1C3F5E;font-family:Cairo,sans-serif;font-size:13px;text-decoration:none;white-space:nowrap'>📋 Google Sheet</a>
         <div style="display:flex;gap:10px">
-          <button onclick="anl_clear()" style="background:#E7E3DB;border:1px solid #E2DED6;border-radius:8px;padding:8px 18px;color:#55504A;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer">🗑 مسح السجل</button>
-          <button onclick="anl_close()" style="background:#E7E3DB;border:1px solid #E2DED6;border-radius:8px;padding:8px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer">✕</button>
+          <button onclick="anl_clear()" style="background:#DCD7CB;border:1px solid #D9D3C7;border-radius:8px;padding:8px 18px;color:#55504A;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer">🗑 مسح السجل</button>
+          <button onclick="anl_close()" style="background:#DCD7CB;border:1px solid #D9D3C7;border-radius:8px;padding:8px 16px;color:#1B1A17;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer">✕</button>
         </div>
       </div>
       <div id="anl-summary" style="display:flex;gap:14px;margin-bottom:22px;flex-wrap:wrap"></div>
@@ -366,7 +367,7 @@ function anl_render(){
   var top=Object.keys(pc).sort(function(a,b){return pc[b]-pc[a];})[0]||'—';
   var cards=[{l:'إجمالي الزيارات',v:all.length,c:'#B55A1E'},{l:'زيارات اليوم',v:todayN,c:'#3498db'},{l:'أكثر صفحة',v:top,c:'#5A5F7A'}];
   document.getElementById('anl-summary').innerHTML=cards.map(function(x){
-    return '<div style="background:#F6F4F0;border:1px solid #E7E3DB;border-radius:12px;padding:16px 20px;flex:1;min-width:130px;text-align:center">'+
+    return '<div style="background:#EDE9E1;border:1px solid #DCD7CB;border-radius:12px;padding:16px 20px;flex:1;min-width:130px;text-align:center">'+
       '<div style="font-size:22px;font-weight:900;color:'+x.c+'">'+x.v+'</div>'+
       '<div style="font-size:11px;color:#6E685F;margin-top:4px">'+x.l+'</div></div>';
   }).join('');
@@ -376,7 +377,7 @@ function anl_render(){
     var dt=d.toLocaleDateString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit'});
     var tm=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     var rgb=PAGE_CLR[e.page]||'148,163,184';
-    return '<tr style="border-bottom:1px solid #EFECE6">'+
+    return '<tr style="border-bottom:1px solid #E4DFD5">'+
       '<td style="padding:10px 16px;color:#55504A;font-size:13px">'+dt+'</td>'+
       '<td style="padding:10px 16px;color:#6E685F;font-size:13px">'+tm+'</td>'+
       '<td style="padding:10px 16px;color:#1B1A17;font-size:13px;font-weight:600">'+(e.user||'—')+'</td>'+
@@ -386,7 +387,7 @@ function anl_render(){
   }).join('');
   document.getElementById('anl-table').innerHTML=
     '<table style="width:100%;border-collapse:collapse">'+
-    '<thead><tr style="border-bottom:2px solid #E7E3DB">'+
+    '<thead><tr style="border-bottom:2px solid #DCD7CB">'+
     '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">التاريخ</th>'+ 
     '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">الوقت</th>'+
     '<th style="padding:8px 16px;color:#6E685F;font-size:12px;font-weight:600;text-align:right">المستخدم</th>'+ 
