@@ -131,6 +131,7 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
 .matrix .col-day{width:auto}
 .matrix .col-sum{width:30px;min-width:30px;background:var(--s2);font-weight:800;color:var(--acc);font-size:9.5px}
 .matrix .col-weak{width:26px;min-width:26px;background:rgba(179,69,60,0.068);font-weight:800;font-size:9.5px}
+.matrix .col-abs{width:26px;min-width:26px;background:rgba(110,104,95,0.10);font-weight:800;font-size:9.5px}
 .matrix .nm-sub{font-size:8px;color:var(--txt3);font-weight:400}
 .matrix tbody tr{cursor:pointer}
 .matrix tbody tr:hover td{background:var(--s2)}
@@ -223,6 +224,7 @@ tbody td{padding:8px 12px;text-align:center;vertical-align:middle}
   /* عمود المجموع وعمود المخالفات */
   .matrix .col-sum{background:#fef3c7!important;color:#000!important;font-weight:800!important}
   .matrix .col-weak{background:#fee2e2!important;font-weight:800!important}
+  .matrix .col-abs{background:#ede9e1!important;font-weight:800!important}
   /* شارة ✓ */
   .ok-tag{background:#bbf7d0!important;color:#2E7D4F!important;border:1px solid #2E7D4F!important}
   .nm-sub{font-size:6px!important;color:#555!important}
@@ -2049,7 +2051,10 @@ function renderDailyOrders(){
   // المندوب "تمام" إذا حقّق الهدف (محقق أو needs<=0) بغض النظر عن سقطاته اليومية
   function meetsOrders(d){ return d.status==='محقق'; }
   // فلتر المخالفين فقط
-  if (__doOnly && thr>0) list = list.filter(d=>weakOf(d)>0 && !meetsOrders(d));
+  // أيام الغياب داخل النافذة المعروضة (لا طلبات أو صفر) — تُحتسب مخالفة أيضاً
+  function absOf(d){ let a=0; dates.forEach(dt=>{const v=d.daily?d.daily[dt]:undefined; if(v===undefined||v===null||v===0)a++;}); return a; }
+  // مخالف = يوم تحت الحد أو يوم غياب
+  if (__doOnly) list = list.filter(d=>(weakOf(d)>0 || absOf(d)>0) && !meetsOrders(d));
   list.sort((a,b)=>(b.completed||0)-(a.completed||0));
 
   document.getElementById('do-count').textContent = list.length+' '+T('driver_unit');
@@ -2060,6 +2065,7 @@ function renderDailyOrders(){
     dates.map(d=>{ const lbl = d.slice(3)!==_doMainMon ? d.slice(0,2)+'/'+d.slice(3,5) : d.slice(0,2); return '<th class="col-day" title="'+d+'">'+lbl+'</th>'; }).join('')+
     '<th class="col-sum">'+(isAr?'مج':'Σ')+'</th>'+
     (thr>0?'<th class="col-weak">'+(isAr?'<'+thr:'<'+thr)+'</th>':'')+
+    '<th class="col-abs" title="'+(isAr?'أيام الغياب':'Absent days')+'">'+(isAr?'غ':'A')+'</th>'+
     '</tr>';
   document.getElementById('do-thead').innerHTML=thead;
 
@@ -2076,9 +2082,10 @@ function renderDailyOrders(){
     return 'cell-mid';
   }
   const rows=list.map(d=>{
-    let total=0, weakDays=0;
+    let total=0, weakDays=0, absDays=0;
     const cells=dates.map(dt=>{
       const v=d.daily?d.daily[dt]:undefined;
+      if(v===undefined||v===null||v===0) absDays++;
       if(typeof v==='number'){ total+=v; if(thr>0 && v>0 && v<thr) weakDays++; }
       const disp=(v===undefined||v===null)?'·':(v===0?'—':v);
       return '<td class="'+cellCls(v)+'">'+disp+'</td>';
@@ -2090,9 +2097,10 @@ function renderDailyOrders(){
       cells+
       '<td class="col-sum">'+total.toLocaleString()+'</td>'+
       (thr>0?'<td class="col-weak" style="color:'+(weakDays>0&&!ok?'#B3453C':'var(--txt3)')+'">'+(ok?'✓':weakDays)+'</td>':'')+
+      '<td class="col-abs" style="color:'+(absDays>0&&!ok?'#8C600D':'var(--txt3)')+'">'+(absDays||'—')+'</td>'+
       '</tr>';
   }).join('');
-  const ncol = dates.length + 2 + (thr>0?1:0);
+  const ncol = dates.length + 3 + (thr>0?1:0);
   document.getElementById('do-tbody').innerHTML = list.length?rows:'<tr><td colspan="'+ncol+'" style="text-align:center;color:var(--txt3);padding:24px">'+T('no_results')+'</td></tr>';
 }
 
@@ -2143,7 +2151,8 @@ function renderDailyHours(){
     // عادي: 26 يوم بـ 8 ساعات+
     return d8>=26;
   }
-  if (__dhOnly && thr>0) list = list.filter(d=>weakOf(d)>0 && !meetsHours(d));
+  function absOf(d){ let a=0; dates.forEach(dt=>{const v=d.daily_hours?d.daily_hours[dt]:undefined; if(v===undefined||v===null||v===0)a++;}); return a; }
+  if (__dhOnly) list = list.filter(d=>(weakOf(d)>0 || absOf(d)>0) && !meetsHours(d));
   list.sort((a,b)=>(b.hours||0)-(a.hours||0));
   document.getElementById('dh-count').textContent = list.length+' '+T('driver_unit');
 
@@ -2153,6 +2162,7 @@ function renderDailyHours(){
     dates.map(d=>{ const lbl = d.slice(3)!==_dhMainMon ? d.slice(0,2)+'/'+d.slice(3,5) : d.slice(0,2); return '<th class="col-day" title="'+d+'">'+lbl+'</th>'; }).join('')+
     '<th class="col-sum">'+(isAr?'مج':'Σ')+'</th>'+
     (thr>0?'<th class="col-weak">'+(isAr?'<'+thr:'<'+thr)+'</th>':'')+
+    '<th class="col-abs" title="'+(isAr?'أيام الغياب':'Absent days')+'">'+(isAr?'غ':'A')+'</th>'+
     '</tr>';
   document.getElementById('dh-thead').innerHTML=thead;
 
@@ -2168,9 +2178,10 @@ function renderDailyHours(){
     return 'cell-mid';
   }
   const rows=list.map(d=>{
-    let total=0, weakDays=0;
+    let total=0, weakDays=0, absDays=0;
     const cells=dates.map(dt=>{
       const v=d.daily_hours?d.daily_hours[dt]:undefined;
+      if(v===undefined||v===null||v===0) absDays++;
       if(typeof v==='number'){ total+=v; if(thr>0 && v>0 && v<thr) weakDays++; }
       const disp=(v===undefined||v===null)?'·':(v===0?'—':v.toFixed(1));
       return '<td class="'+cellCls(v)+'">'+disp+'</td>';
@@ -2182,9 +2193,10 @@ function renderDailyHours(){
       cells+
       '<td class="col-sum">'+total.toFixed(0)+'</td>'+
       (thr>0?'<td class="col-weak" style="color:'+(weakDays>0&&!ok?'#B3453C':'var(--txt3)')+'">'+(ok?'✓':weakDays)+'</td>':'')+
+      '<td class="col-abs" style="color:'+(absDays>0&&!ok?'#8C600D':'var(--txt3)')+'">'+(absDays||'—')+'</td>'+
       '</tr>';
   }).join('');
-  const ncol = dates.length + 2 + (thr>0?1:0);
+  const ncol = dates.length + 3 + (thr>0?1:0);
   document.getElementById('dh-tbody').innerHTML = list.length?rows:'<tr><td colspan="'+ncol+'" style="text-align:center;color:var(--txt3);padding:24px">'+T('no_results')+'</td></tr>';
 }
 // يحدد أي تواريخ هي ويكيند (جمعة/سبت) من قائمة dates بصيغة DD/MM لشهر 5-2026
