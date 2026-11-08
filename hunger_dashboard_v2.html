@@ -2510,7 +2510,11 @@ function renderSupervisors() {
   // محققو أمس من الأرقام المؤكدة
   Object.entries(spvMap).forEach(([k,s])=>{
     s.ach14 = D_PREV_ACH[k]||0;
-    s.pct14=+(s.ach14/s.total*100).toFixed(1);
+    // نسبة الأمس تُقسم على حجم فريق الأمس لا على حجم اليوم — وإلا بدا الفرق
+    // أكبر أو أصغر لمجرد انتقال مندوب بين المشرفين.
+    s.tot14 = (typeof D_PREV_SPV!=='undefined' && D_PREV_SPV[k]) ? D_PREV_SPV[k] : s.total;
+    s.d_tot = s.total - s.tot14;
+    s.pct14=+(s.ach14/(s.tot14||1)*100).toFixed(1);
     s.d_pct=+(s.pct15-s.pct14).toFixed(1);
     s.d_n  =s.ach15-s.ach14;
   });
@@ -2572,6 +2576,7 @@ function renderSupervisors() {
           <span style="display:inline-flex;width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;font-size:10px;font-weight:900;background:${gc}22;color:${gc};border:1px solid ${gc};vertical-align:middle;margin-right:3px">${grade}</span></div>
         <div style="font-size:18px;font-weight:900;color:${dc};margin:3px 0">${dltStr}</div>
         <div style="font-size:10px;color:var(--txt2)">يوم ${mode==='ach'?snapDay:prevOrdDay}: ${before} ← يوم ${curDay}: ${after}</div>
+        ${(mode==='ach'&&s.d_tot) ? `<div style="font-size:10px;color:var(--txt3);margin-top:3px">أفراد الفريق: ${s.tot14} ← ${s.total} (${s.d_tot>0?'+':''}${s.d_tot}) — جزء من الفرق سببه تغيّر الحجم</div>` : ''}
       </div></div>`;
   }
 
